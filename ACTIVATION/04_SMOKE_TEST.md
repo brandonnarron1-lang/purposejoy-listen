@@ -14,6 +14,7 @@ URLExpected result`https://listen.purposejoy.org/listen`PurposeJoy Listen page r
 ### 4B — OG Meta Tags
 
 1. View source on `https://listen.purposejoy.org/listen` (Cmd+U in browser)
+
 2. Search for `og:title` — you should find:
 
    ```html
@@ -21,6 +22,7 @@ URLExpected result`https://listen.purposejoy.org/listen`PurposeJoy Listen page r
    <meta property="og:description" content="Stream gospel and faith music...">
    <meta name="twitter:card" content="summary_large_image">
    ```
+
 3. Validate OG tags: paste the URL into [**https://www.opengraph.xyz**](https://www.opengraph.xyz) — confirm all fields populate cleanly
 
 ### 4C — API Health

@@ -49,7 +49,7 @@ export function ListenHome() {
     <div className="min-h-screen pb-32">
       {/* Hero */}
       <div className="relative overflow-hidden px-6 pt-16 pb-12 text-center"
-        style={{ background: 'linear-gradient(180deg, rgba(124,58,237,0.3) 0%, var(--pj-bg) 100%)' }}>
+        style={{ background: 'linear-gradient(180deg, rgba(27,42,78,0.15) 0%, var(--pj-bg) 100%)' }}>
         <div className="mb-2 text-xs tracking-widest uppercase" style={{ color: 'var(--pj-secondary)' }}>
           {playlist?.title ?? 'PurposeJoy'}
         </div>
@@ -91,7 +91,7 @@ export function ListenHome() {
                 <Link
                   to={`/listen/${song.slug}`}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity px-2 py-1 rounded"
-                  style={{ color: 'var(--pj-secondary)', background: 'rgba(124,58,237,0.15)' }}
+                  style={{ color: 'var(--pj-secondary)', background: 'rgba(27,42,78,0.08)' }}
                   onClick={e => e.stopPropagation()}
                 >
                   Details

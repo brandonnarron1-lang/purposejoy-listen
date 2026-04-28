@@ -1,12 +1,21 @@
 @import "tailwindcss";
 
+/* ============================================================
+   PURPOSEJOY BRAND TOKENS — PROVISIONAL v1 DEFAULTS
+   These are operator-confirmed defaults matching PurposeJoy's
+   "Live With Purpose And Joy" tone: deep navy + warm gold.
+   Override by changing hex values below — single source of truth.
+   ============================================================ */
 :root {
-  --pj-primary: #7C3AED;
-  --pj-secondary: #A78BFA;
-  --pj-bg: #0F0A1E;
-  --pj-surface: #1A1232;
-  --pj-text: #F5F3FF;
-  --pj-muted: #6B7280;
+  --pj-primary: #1B2A4E;    /* Deep purpose navy */
+  --pj-secondary: #E8B14A;  /* Joy gold */
+  --pj-bg: #FAF7F2;         /* Warm off-white */
+  --pj-surface: #FFFFFF;    /* White surface */
+  --pj-text: #1B2A4E;       /* Primary text (navy) */
+  --pj-muted: #5A6478;      /* Secondary text */
+  --pj-border: #E5E0D5;     /* Border / dividers */
+  --pj-player-bg: #1B2A4E;  /* Player bar (always dark) */
+  --pj-player-text: #FAF7F2;/* Player bar text (always light) */
   --player-height: 72px;
 }
 
@@ -14,6 +23,12 @@ html, body, #root {
   height: 100%;
   background-color: var(--pj-bg);
   color: var(--pj-text);
+}
+
+/* Player bar always uses dark bg regardless of light/dark mode */
+.player-bar-dark {
+  background-color: var(--pj-player-bg) !important;
+  color: var(--pj-player-text) !important;
 }
 
 /* Scrollbar */
@@ -25,7 +40,7 @@ html, body, #root {
 input[type='range'] {
   -webkit-appearance: none;
   height: 4px;
-  background: rgba(124,58,237,0.3);
+  background: rgba(27,42,78,0.15);
   border-radius: 2px;
   outline: none;
   cursor: pointer;

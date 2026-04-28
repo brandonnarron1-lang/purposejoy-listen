@@ -96,7 +96,7 @@ export function AdminMusic() {
         <div className="rounded-xl overflow-hidden" style={{ background: 'var(--pj-surface)' }}>
           <table className="w-full text-sm">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(124,58,237,0.2)' }}>
+              <tr style={{ borderBottom: '1px solid rgba(27,42,78,0.1)' }}>
                 {['#','Song','Published','Download','Plays','DLs','Shares','Actions'].map(h => (
                   <th key={h} className="text-left px-4 py-3 font-semibold text-xs uppercase tracking-wide"
                     style={{ color: 'var(--pj-muted)' }}>{h}</th>
@@ -110,7 +110,7 @@ export function AdminMusic() {
                 </td></tr>
               )}
               {songs.map((song, i) => (
-                <tr key={song.id} style={{ borderBottom: '1px solid rgba(124,58,237,0.1)' }}
+                <tr key={song.id} style={{ borderBottom: '1px solid rgba(27,42,78,0.06)' }}
                   className="hover:bg-purple-900/10 transition-colors">
                   <td className="px-4 py-3" style={{ color: 'var(--pj-muted)' }}>{i+1}</td>
                   <td className="px-4 py-3">
@@ -131,7 +131,7 @@ export function AdminMusic() {
                     <button onClick={() => toggleDownload(song)}
                       className="px-3 py-1 rounded-full text-xs font-semibold"
                       style={song.download_enabled
-                        ? { background: 'rgba(124,58,237,0.15)', color: 'var(--pj-secondary)' }
+                        ? { background: 'rgba(27,42,78,0.08)', color: 'var(--pj-secondary)' }
                         : { background: 'rgba(107,114,128,0.15)', color: '#6b7280' }
                       }>
                       {song.download_enabled ? '⬇ On' : '— Off'}
@@ -144,7 +144,7 @@ export function AdminMusic() {
                     <div className="flex gap-2">
                       <Link to={`/admin/music/${song.id}/edit`}
                         className="px-3 py-1 rounded text-xs"
-                        style={{ background: 'rgba(124,58,237,0.15)', color: 'var(--pj-secondary)' }}>
+                        style={{ background: 'rgba(27,42,78,0.08)', color: 'var(--pj-secondary)' }}>
                         Edit
                       </Link>
                       <button onClick={() => archiveSong(song)}

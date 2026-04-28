@@ -61,7 +61,7 @@ export function SongDetail() {
             href={`/download/${song.slug}`}
             download
             className="px-4 py-3 rounded-full text-sm font-semibold"
-            style={{ background: 'var(--pj-surface)', color: 'var(--pj-text)', border: '1px solid rgba(124,58,237,0.4)' }}
+            style={{ background: 'var(--pj-surface)', color: 'var(--pj-text)', border: '1px solid rgba(27,42,78,0.2)' }}
             title="For personal listening. Not for redistribution."
           >
             ⬇ Download

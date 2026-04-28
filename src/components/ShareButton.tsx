@@ -49,7 +49,7 @@ export function ShareButton({ song, compact }: ShareButtonProps) {
     <div className="relative">
       <button onClick={handleShare}
         className={compact ? 'text-xl' : 'px-4 py-2 rounded-full text-sm font-semibold'}
-        style={compact ? { color: 'var(--pj-muted)' } : { background: 'var(--pj-surface)', color: 'var(--pj-text)', border: '1px solid rgba(124,58,237,0.4)' }}>
+        style={compact ? { color: 'var(--pj-muted)' } : { background: 'var(--pj-surface)', color: 'var(--pj-text)', border: '1px solid rgba(27,42,78,0.2)' }}>
         {compact ? '↗' : '🔗 Share'}
       </button>
 
@@ -62,7 +62,7 @@ export function ShareButton({ song, compact }: ShareButtonProps) {
             {options.map(o => (
               <button key={o.label} onClick={o.action}
                 className="w-full text-left py-3 px-4 rounded-xl mb-2 text-sm"
-                style={{ background: 'rgba(124,58,237,0.1)' }}>
+                style={{ background: 'rgba(27,42,78,0.06)' }}>
                 {o.label}
               </button>
             ))}

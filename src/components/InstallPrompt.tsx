@@ -47,7 +47,7 @@ export function InstallPrompt() {
   return (
     <div
       className="fixed top-4 left-1/2 -translate-x-1/2 z-[150] flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl text-sm max-w-xs w-[calc(100%-2rem)]"
-      style={{ background: 'var(--pj-surface)', border: '1px solid rgba(124,58,237,0.4)' }}
+      style={{ background: 'var(--pj-surface)', border: '1px solid rgba(27,42,78,0.2)' }}
     >
       <span className="text-xl">📲</span>
       <div className="flex-1">

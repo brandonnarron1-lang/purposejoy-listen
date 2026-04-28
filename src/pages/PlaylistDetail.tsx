@@ -60,7 +60,7 @@ export function PlaylistDetail() {
             <Link
               to={`/listen/${song.slug}`}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity px-2 py-1 rounded"
-              style={{ color: 'var(--pj-secondary)', background: 'rgba(124,58,237,0.15)' }}
+              style={{ color: 'var(--pj-secondary)', background: 'rgba(27,42,78,0.08)' }}
               onClick={e => e.stopPropagation()}
             >Details</Link>
           </div>

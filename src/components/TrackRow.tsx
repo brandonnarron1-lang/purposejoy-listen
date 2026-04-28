@@ -23,8 +23,8 @@ export function TrackRow({ song, queue, index }: TrackRowProps) {
       onClick={() => play(song, queue)}
       className="flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-all"
       style={{
-        background: isActive ? 'rgba(124,58,237,0.15)' : 'transparent',
-        border: isActive ? '1px solid rgba(124,58,237,0.4)' : '1px solid transparent',
+        background: isActive ? 'rgba(27,42,78,0.08)' : 'transparent',
+        border: isActive ? '1px solid rgba(27,42,78,0.2)' : '1px solid transparent',
       }}
     >
       {/* Index / playing indicator */}

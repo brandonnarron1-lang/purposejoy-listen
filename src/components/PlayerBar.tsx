@@ -22,11 +22,11 @@ export function PlayerBar() {
     <>
       {/* Mobile: sticky bottom bar */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
-        style={{ background: 'var(--pj-surface)', borderTop: '1px solid rgba(124,58,237,0.3)' }}
+        className="fixed bottom-0 left-0 right-0 z-50 md:hidden player-bar-dark"
+        style={{ borderTop: '1px solid rgba(232,177,74,0.3)' }}
       >
         {/* Progress bar */}
-        <div className="relative h-1 w-full" style={{ background: 'rgba(124,58,237,0.2)' }}>
+        <div className="relative h-1 w-full" style={{ background: 'rgba(27,42,78,0.1)' }}>
           <div className="h-1 transition-all" style={{ width: `${progress}%`, background: 'var(--pj-primary)' }} />
         </div>
         <div className="flex items-center gap-3 px-4 py-3" onClick={() => setExpanded(true)}>
@@ -51,8 +51,8 @@ export function PlayerBar() {
 
       {/* Desktop: full bottom bar */}
       <div
-        className="hidden md:flex fixed bottom-0 left-0 right-0 z-50 items-center gap-6 px-8"
-        style={{ height: '80px', background: 'var(--pj-surface)', borderTop: '1px solid rgba(124,58,237,0.3)' }}
+        className="hidden md:flex fixed bottom-0 left-0 right-0 z-50 items-center gap-6 px-8 player-bar-dark"
+        style={{ height: '80px', borderTop: '1px solid rgba(232,177,74,0.3)' }}
       >
         {/* Song info */}
         <div className="flex items-center gap-3 w-64 flex-shrink-0">

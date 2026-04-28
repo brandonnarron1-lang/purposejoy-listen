@@ -5,8 +5,8 @@
   "start_url": "/listen",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "theme_color": "#7C3AED",
-  "background_color": "#0F0A1E",
+  "theme_color": "#1B2A4E",
+  "background_color": "#FAF7F2",
   "lang": "en-US",
   "categories": ["music", "entertainment"],
   "icons": [

@@ -97,7 +97,7 @@ export function AdminSongForm() {
   }
 
   const inputClass = 'w-full px-4 py-3 rounded-xl text-sm outline-none focus:ring-2'
-  const inputStyle = { background: 'var(--pj-bg)', color: 'var(--pj-text)', border: '1px solid rgba(124,58,237,0.3)' }
+  const inputStyle = { background: 'var(--pj-bg)', color: 'var(--pj-text)', border: '1px solid rgba(27,42,78,0.15)' }
 
   return (
     <div className="min-h-screen p-6" style={{ background: 'var(--pj-bg)' }}>
@@ -114,7 +114,7 @@ export function AdminSongForm() {
               <div>
                 <label className="block text-sm font-semibold mb-2">Audio file (MP3) *</label>
                 <div className="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors"
-                  style={{ borderColor: 'rgba(124,58,237,0.4)', background: 'var(--pj-surface)' }}
+                  style={{ borderColor: 'rgba(27,42,78,0.2)', background: 'var(--pj-surface)' }}
                   onClick={() => audioRef.current?.click()}>
                   <div className="text-3xl mb-2">🎵</div>
                   <p className="text-sm" style={{ color: 'var(--pj-muted)' }}>
@@ -129,7 +129,7 @@ export function AdminSongForm() {
               <div>
                 <label className="block text-sm font-semibold mb-2">Cover image (optional)</label>
                 <div className="border-2 border-dashed rounded-xl p-4 text-center cursor-pointer"
-                  style={{ borderColor: 'rgba(124,58,237,0.2)', background: 'var(--pj-surface)' }}
+                  style={{ borderColor: 'rgba(27,42,78,0.1)', background: 'var(--pj-surface)' }}
                   onClick={() => coverRef.current?.click()}>
                   <p className="text-sm" style={{ color: 'var(--pj-muted)' }}>
                     {coverName || 'Click to select image (JPG/PNG)'}
@@ -220,7 +220,7 @@ export function AdminSongForm() {
           {uploading && (
             <div className="rounded-xl p-4" style={{ background: 'var(--pj-surface)' }}>
               <p className="text-sm mb-2" style={{ color: 'var(--pj-muted)' }}>Uploading... {progress}%</p>
-              <div className="h-2 rounded-full" style={{ background: 'rgba(124,58,237,0.2)' }}>
+              <div className="h-2 rounded-full" style={{ background: 'rgba(27,42,78,0.1)' }}>
                 <div className="h-2 rounded-full transition-all" style={{ width: `${progress}%`, background: 'var(--pj-primary)' }} />
               </div>
             </div>

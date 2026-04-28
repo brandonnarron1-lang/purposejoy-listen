@@ -1,0 +1,13 @@
+name = "purposejoy-listen"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "purposejoy_db"
+database_id = "5623368b-a8a3-4dc4-8789-14ba1acd0454"
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "purposejoy-media"

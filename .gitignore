@@ -1,0 +1,10 @@
+node_modules/
+dist/
+dist-functions/
+.wrangler/
+.env
+.env.local
+*.local
+
+# Mac
+.DS_Store

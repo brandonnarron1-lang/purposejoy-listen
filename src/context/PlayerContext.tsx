@@ -26,18 +26,45 @@ interface PlayerContextValue extends PlayerState {
   replay: () => void
   currentSong: Song | null
   audioRef: React.RefObject<HTMLAudioElement>
+  analyserNode: AnalyserNode | null
+  initAudioContext: () => void
 }
 
 const PlayerContext = createContext<PlayerContextValue | null>(null)
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const audioRef = useRef<HTMLAudioElement>(null!)
+  const audioCtxRef = useRef<AudioContext | null>(null)
+  const audioSourceRef = useRef<MediaElementAudioSourceNode | null>(null)
+  const analyserRef = useRef<AnalyserNode | null>(null)
+  const [analyserNode, setAnalyserNode] = useState<AnalyserNode | null>(null)
+
   const [state, setState] = useState<PlayerState>({
     queue: [], currentIndex: -1, playing: false,
     currentTime: 0, duration: 0, shuffle: false, volume: 1,
   })
 
   const currentSong = state.currentIndex >= 0 ? (state.queue[state.currentIndex] ?? null) : null
+
+  // Call once after first user interaction to wire up AudioContext
+  const initAudioContext = useCallback(() => {
+    if (audioCtxRef.current || !audioRef.current) return
+    try {
+      const ctx = new AudioContext()
+      const source = ctx.createMediaElementSource(audioRef.current)
+      const analyser = ctx.createAnalyser()
+      analyser.fftSize = 64
+      analyser.smoothingTimeConstant = 0.8
+      source.connect(analyser)
+      analyser.connect(ctx.destination)
+      audioCtxRef.current = ctx
+      audioSourceRef.current = source
+      analyserRef.current = analyser
+      setAnalyserNode(analyser)
+    } catch {
+      // Graceful — no visualizer
+    }
+  }, [])
 
   const logPlay = useCallback((song: Song) => {
     fetch('/api/events', {
@@ -52,7 +79,9 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     const idx = newQueue.findIndex(s => s.id === song.id)
     setState(s => ({ ...s, queue: newQueue, currentIndex: idx >= 0 ? idx : 0, playing: true }))
     logPlay(song)
-  }, [logPlay])
+    // Init audio context on first play (requires user gesture)
+    initAudioContext()
+  }, [logPlay, initAudioContext])
 
   const pause = useCallback(() => {
     audioRef.current?.pause()
@@ -62,7 +91,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const resume = useCallback(() => {
     audioRef.current?.play().catch(() => {})
     setState(s => ({ ...s, playing: true }))
-  }, [])
+    initAudioContext()
+  }, [initAudioContext])
 
   const togglePlay = useCallback(() => {
     if (state.playing) pause(); else resume()
@@ -129,6 +159,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     <PlayerContext.Provider value={{
       ...state, play, pause, resume, togglePlay, next, prev,
       seek, setVolume, toggleShuffle, replay, currentSong, audioRef,
+      analyserNode, initAudioContext,
     }}>
       {children}
       <audio

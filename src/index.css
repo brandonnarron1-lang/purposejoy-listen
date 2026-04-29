@@ -52,3 +52,75 @@ input[type='range']::-webkit-slider-thumb {
   border-radius: 50%;
   background: var(--pj-primary);
 }
+
+/* ============================================================
+   VISUAL UPGRADE v1.1 — ANIMATION + UTILITY CLASSES
+   DO NOT MODIFY existing classes above.
+   ============================================================ */
+
+/* Ken Burns effect — GPU-accelerated, pauses when not playing */
+@keyframes cover-kenburns {
+  0%   { transform: scale(1.00) translate(0%, 0%); }
+  50%  { transform: scale(1.06) translate(-1.5%, -1%); }
+  100% { transform: scale(1.00) translate(0%, 0%); }
+}
+
+.cover-kenburns {
+  animation: cover-kenburns 14s ease-in-out infinite;
+  will-change: transform;
+  transform-origin: center center;
+}
+
+.cover-kenburns.paused {
+  animation-play-state: paused;
+}
+
+/* Cover pulse for currently-playing track in list */
+@keyframes cover-pulse {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(232, 177, 74, 0.00); }
+  50%      { box-shadow: 0 0 0 8px rgba(232, 177, 74, 0.25); }
+}
+
+.cover-pulse {
+  animation: cover-pulse 2.4s ease-in-out infinite;
+}
+
+/* Marquee scroll for long titles in player bar */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-content {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 12s linear infinite;
+  animation-delay: 1.5s;
+}
+
+/* Lyrics panel fade-gradient masks */
+.lyrics-fade {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .cover-kenburns,
+  .cover-pulse,
+  .marquee-content {
+    animation: none !important;
+  }
+}

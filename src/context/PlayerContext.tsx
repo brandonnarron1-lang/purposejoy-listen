@@ -87,11 +87,12 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     const idx = newQueue.findIndex(s => s.id === song.id)
     setState(s => ({ ...s, queue: newQueue, currentIndex: idx >= 0 ? idx : 0, playing: true }))
     logPlay(song)
-    initAudioContext()
-    if ('mediaSession' in navigator) {
-      navigator.mediaSession.playbackState = 'playing'
+    // Fix A: DO NOT call initAudioContext() here — that locks audio to Web Audio and
+    // iOS suspends the context on lock screen. Only resume if already initialized.
+    if (audioCtxRef.current?.state === 'suspended') {
+      audioCtxRef.current.resume().catch(() => {})
     }
-  }, [logPlay, initAudioContext])
+  }, [logPlay])
 
   const pause = useCallback(() => {
     audioRef.current?.pause()
@@ -102,13 +103,16 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const resume = useCallback(() => {
+    // Fix A: DO NOT call initAudioContext() here — only resume if already initialized
+    if (audioCtxRef.current?.state === 'suspended') {
+      audioCtxRef.current.resume().catch(() => {})
+    }
     audioRef.current?.play().catch(() => {})
     setState(s => ({ ...s, playing: true }))
-    initAudioContext()
     if ('mediaSession' in navigator) {
       navigator.mediaSession.playbackState = 'playing'
     }
-  }, [initAudioContext])
+  }, [])
 
   const togglePlay = useCallback(() => {
     if (state.playing) pause(); else resume()
@@ -164,13 +168,41 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const toggleShuffle = useCallback(() => setState(s => ({ ...s, shuffle: !s.shuffle })), [])
   const replay = useCallback(() => seek(0), [seek])
 
+  // Fix A: Resume AudioContext on visibility + focus (iOS suspends it on lock screen)
+  useEffect(() => {
+    const resumeCtx = () => {
+      if (audioCtxRef.current?.state === 'suspended') {
+        audioCtxRef.current.resume().catch(() => {})
+      }
+    }
+    document.addEventListener('visibilitychange', resumeCtx)
+    window.addEventListener('focus', resumeCtx)
+    return () => {
+      document.removeEventListener('visibilitychange', resumeCtx)
+      window.removeEventListener('focus', resumeCtx)
+    }
+  }, [])
+
   // Sync audio src when currentIndex changes
   useEffect(() => {
     const song = state.queue[state.currentIndex]
     if (!song || !audioRef.current) return
     audioRef.current.src = `/api/stream/${song.slug}`
     audioRef.current.volume = state.volume
-    if (state.playing) audioRef.current.play().catch(() => {})
+    if (state.playing) {
+      // Fix A: Resume AudioContext if initialized and suspended before play()
+      if (audioCtxRef.current?.state === 'suspended') {
+        audioCtxRef.current.resume().catch(() => {})
+      }
+      // Fix B: Set playbackState AFTER play() Promise resolves (iOS requirement)
+      audioRef.current.play()
+        .then(() => {
+          if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = 'playing'
+          }
+        })
+        .catch(() => {})
+    }
   }, [state.currentIndex]) // eslint-disable-line
 
   // Fix B: Media Session metadata + all handlers + playbackState on every track change
@@ -207,13 +239,17 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     setState(s => ({ ...s, currentTime: time }))
     if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
       try {
-        navigator.mediaSession.setPositionState({
-          duration: audio.duration || 0,
-          playbackRate: audio.playbackRate || 1,
-          position: time,
-        })
+        // Fix D: guard against NaN/Infinity duration — Safari throws if invalid
+        const dur = audio.duration
+        if (dur && !isNaN(dur) && isFinite(dur)) {
+          navigator.mediaSession.setPositionState({
+            duration: dur,
+            playbackRate: audio.playbackRate || 1,
+            position: Math.min(time, dur),
+          })
+        }
       } catch {
-        // ignore — Safari can throw if duration is NaN
+        // ignore
       }
     }
   }, [])

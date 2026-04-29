@@ -13,6 +13,8 @@ export interface Song {
   sort_order: number
   published: number
   download_enabled: number
+  lyrics_timed?: string | null
+  transcript_state?: string
   created_at: string
   updated_at: string
 }

@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import { usePlayer } from '../context/PlayerContext'
-import { NowPlayingModal } from './NowPlayingModal'
 import { CoverArt } from './CoverArt'
 
 function fmt(s: number) {
@@ -12,23 +10,18 @@ function fmt(s: number) {
 
 function MarqueeTitle({ title, playing }: { title: string; playing: boolean }) {
   const shouldScroll = title.length > 26
-
-  if (!shouldScroll) {
-    return (
-      <p className="pj-track-title" style={{ color: '#FAF7F2', fontSize: 13, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-        {title}
-      </p>
-    )
-  }
-
+  if (!shouldScroll) return (
+    <p className="pj-track-title" style={{ color: '#FAF7F2', fontSize: 13, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+      {title}
+    </p>
+  )
   return (
     <div style={{ overflow: 'hidden', width: '100%' }}>
       <p
         className={playing ? 'marquee-content' : ''}
         style={{ color: '#FAF7F2', fontSize: 13, fontFamily: 'var(--font-head)', fontWeight: 600, whiteSpace: 'nowrap', margin: 0 }}
       >
-        {title}
-        {playing && <span style={{ paddingLeft: 40 }}>{title}</span>}
+        {title}{playing && <span style={{ paddingLeft: 40 }}>{title}</span>}
       </p>
     </div>
   )
@@ -39,7 +32,6 @@ export function PlayerBar() {
     currentSong, playing, currentTime, duration, shuffle,
     togglePlay, next, prev, seek, toggleShuffle, replay, setVolume,
   } = usePlayer()
-  const [expanded, setExpanded] = useState(false)
 
   if (!currentSong) return null
 
@@ -60,83 +52,55 @@ export function PlayerBar() {
     background: 'linear-gradient(135deg, #FFD750 0%, #D4AF37 100%)',
     color: '#1B2A4E',
     boxShadow: '0 2px 10px rgba(212,175,55,0.35)',
-    fontFamily: 'var(--font-head)',
-    fontWeight: 700,
-    border: 'none',
-    cursor: 'pointer',
+    fontFamily: 'var(--font-head)', fontWeight: 700,
+    border: 'none', cursor: 'pointer',
   } as React.CSSProperties
 
   return (
     <>
-      {/* ── MOBILE: 56px sticky bottom bar ── */}
+      {/* ── MOBILE: compact transport bar (no modal) ── */}
       <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden" style={barBase}>
-        {/* 3px gold progress line */}
+        {/* Gold progress line */}
         <div style={{ height: 3, width: '100%', background: 'rgba(255,255,255,0.08)' }}>
           <div style={{
-            height: '100%',
-            width: `${progress}%`,
+            height: '100%', width: `${progress}%`,
             background: 'linear-gradient(90deg, #D4AF37, #FFD750)',
             boxShadow: '0 0 6px rgba(212,175,55,0.5)',
             transition: 'width 0.5s linear',
           }} />
         </div>
-
-        <div
-          className="flex items-center gap-3 px-4"
-          style={{ height: 56, cursor: 'pointer' }}
-          onClick={() => setExpanded(true)}
-        >
+        <div className="flex items-center gap-3 px-4" style={{ height: 56 }}>
           <div style={{ flexShrink: 0 }}>
             <CoverArt src={coverSrc} alt="" isPlaying={playing} size="mini" isPulsing={playing} />
           </div>
-
           <div className="flex-1 min-w-0">
             <MarqueeTitle title={currentSong.title} playing={playing} />
             <p style={{ color: 'rgba(250,247,242,0.5)', fontSize: 11, margin: 0, fontFamily: 'var(--font-head)', fontWeight: 400, letterSpacing: '0.1em', textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {currentSong.artist}
             </p>
           </div>
-
-          <button
-            onClick={e => { e.stopPropagation(); togglePlay() }}
-            style={playBtnStyle}
-            aria-label={playing ? 'Pause' : 'Play'}
-          >
+          <button onClick={prev} style={{ color: 'rgba(250,247,242,0.55)', fontSize: 18, padding: '0 2px', background: 'none', border: 'none', cursor: 'pointer' }} aria-label="Prev">⏮</button>
+          <button onClick={e => { e.stopPropagation(); togglePlay() }} style={playBtnStyle} aria-label={playing ? 'Pause' : 'Play'}>
             {playing ? '⏸' : '▶'}
           </button>
-
-          <button
-            onClick={e => { e.stopPropagation(); next() }}
-            style={{ color: 'rgba(250,247,242,0.55)', fontSize: 20, padding: '0 4px', background: 'none', border: 'none', cursor: 'pointer' }}
-            aria-label="Next track"
-          >
-            ⏭
-          </button>
+          <button onClick={next} style={{ color: 'rgba(250,247,242,0.55)', fontSize: 18, padding: '0 2px', background: 'none', border: 'none', cursor: 'pointer' }} aria-label="Next">⏭</button>
         </div>
       </div>
 
-      {/* ── DESKTOP: 80px fixed bottom bar ── */}
-      <div
-        className="hidden md:flex fixed bottom-0 left-0 right-0 z-50 items-center gap-6 px-8"
-        style={{ ...barBase, height: 80 }}
-      >
-        {/* Gold progress line along top edge */}
+      {/* ── DESKTOP: full-width bar ── */}
+      <div className="hidden md:flex fixed bottom-0 left-0 right-0 z-50 items-center gap-6 px-8" style={{ ...barBase, height: 80 }}>
+        {/* Gold progress line */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'rgba(255,255,255,0.08)' }}>
           <div style={{
-            height: '100%',
-            width: `${progress}%`,
+            height: '100%', width: `${progress}%`,
             background: 'linear-gradient(90deg, #D4AF37, #FFD750)',
             boxShadow: '0 0 6px rgba(212,175,55,0.5)',
             transition: 'width 0.5s linear',
           }} />
         </div>
 
-        {/* Song info — clickable */}
-        <div
-          className="flex items-center gap-3 flex-shrink-0 cursor-pointer"
-          style={{ width: 280 }}
-          onClick={() => setExpanded(true)}
-        >
+        {/* Song info */}
+        <div className="flex items-center gap-3 flex-shrink-0" style={{ width: 280 }}>
           <CoverArt src={coverSrc} alt="" isPlaying={playing} size="mini" isPulsing={playing} />
           <div className="min-w-0">
             <p className="pj-track-title" style={{ color: '#FAF7F2', fontSize: 13, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -151,17 +115,13 @@ export function PlayerBar() {
         {/* Center controls */}
         <div className="flex-1 flex flex-col items-center gap-2">
           <div className="flex items-center gap-4">
-            <button onClick={toggleShuffle} style={{ fontSize: 18, opacity: shuffle ? 1 : 0.4, color: '#D4AF37', background: 'none', border: 'none', cursor: 'pointer' }} title="Shuffle">⇄</button>
+            <button onClick={toggleShuffle} style={{ fontSize: 18, opacity: shuffle ? 1 : 0.4, color: '#D4AF37', background: 'none', border: 'none', cursor: 'pointer' }}>⇄</button>
             <button onClick={prev} style={{ fontSize: 22, color: '#FAF7F2', background: 'none', border: 'none', cursor: 'pointer' }}>⏮</button>
-            <button
-              onClick={togglePlay}
-              style={{ ...playBtnStyle, width: 44, height: 44, fontSize: 18 }}
-              aria-label={playing ? 'Pause' : 'Play'}
-            >
+            <button onClick={togglePlay} style={{ ...playBtnStyle, width: 44, height: 44, fontSize: 18 }} aria-label={playing ? 'Pause' : 'Play'}>
               {playing ? '⏸' : '▶'}
             </button>
             <button onClick={next} style={{ fontSize: 22, color: '#FAF7F2', background: 'none', border: 'none', cursor: 'pointer' }}>⏭</button>
-            <button onClick={replay} style={{ fontSize: 18, color: 'rgba(250,247,242,0.4)', background: 'none', border: 'none', cursor: 'pointer' }} title="Replay">↩</button>
+            <button onClick={replay} style={{ fontSize: 18, color: 'rgba(250,247,242,0.4)', background: 'none', border: 'none', cursor: 'pointer' }}>↩</button>
           </div>
           <div className="flex items-center gap-2 w-full max-w-md">
             <span style={{ color: 'rgba(250,247,242,0.4)', fontSize: 11, fontFamily: 'var(--font-head)', width: 40, textAlign: 'right', letterSpacing: '0.05em' }}>{fmt(currentTime)}</span>
@@ -176,8 +136,6 @@ export function PlayerBar() {
           <input type="range" min={0} max={1} step={0.02} defaultValue={1} onChange={e => setVolume(Number(e.target.value))} className="flex-1" />
         </div>
       </div>
-
-      {expanded && <NowPlayingModal onClose={() => setExpanded(false)} />}
     </>
   )
 }

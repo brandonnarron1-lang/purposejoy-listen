@@ -966,3 +966,160 @@ input[type='range']::-webkit-slider-thumb {
   height: 18px;
   box-shadow: 0 0 16px rgba(212, 175, 55, 0.8), 0 2px 6px rgba(0, 0, 0, 0.4);
 }
+
+
+/* ─── Stage B1: Theme custom properties ─── */
+:root {
+  --theme-vibrant: #D4AF37;
+  --theme-dark-vibrant: #1A0C00;
+  --theme-muted: #2A1A0C;
+  --theme-light-vibrant: #FFD750;
+  --theme-raw-avg: #1A0C00;
+  --theme-text: #FFF6E0;
+  --theme-transition: 1200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.listen-home {
+  background:
+    linear-gradient(180deg,
+      rgba(15, 7, 3, 0.95) 0%,
+      var(--theme-dark-vibrant) 40%,
+      rgba(15, 7, 3, 0.95) 100%
+    );
+  transition: background var(--theme-transition);
+}
+
+.atmospheric-glow {
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in oklch, var(--theme-vibrant), transparent 75%) 0%,
+    color-mix(in oklch, var(--theme-light-vibrant), transparent 92%) 35%,
+    transparent 70%
+  );
+  transition: background var(--theme-transition);
+}
+
+/* ─── Stage B1: Now-Playing Sheet shell ─── */
+.nps-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  pointer-events: none;
+  transition:
+    background 380ms cubic-bezier(0.32, 0.72, 0, 1),
+    backdrop-filter 380ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.nps-backdrop--open {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  pointer-events: auto;
+}
+
+.nps-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 4vh;
+  z-index: 100;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--theme-dark-vibrant), #0a0500 30%) 0%,
+    color-mix(in oklch, var(--theme-muted), #0a0500 50%) 50%,
+    color-mix(in oklch, var(--theme-dark-vibrant), #0a0500 60%) 100%
+  );
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  box-shadow:
+    0 -24px 48px rgba(0, 0, 0, 0.55),
+    0 -1px 0 0 rgba(255, 255, 255, 0.06) inset;
+  transition: transform 460ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  touch-action: none;
+}
+@media (min-width: 768px) {
+  .nps-sheet {
+    top: 6vh;
+    left: auto;
+    right: 1.5rem;
+    width: 480px;
+    border-radius: 24px;
+    box-shadow:
+      0 24px 64px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+}
+
+.nps-handle {
+  width: 100%;
+  padding: 12px 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+.nps-handle:active { cursor: grabbing; }
+.nps-handle-bar {
+  width: 36px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 246, 224, 0.35);
+  transition: background 200ms ease;
+}
+.nps-sheet--dragging .nps-handle-bar {
+  background: rgba(255, 246, 224, 0.6);
+}
+
+.nps-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.nps-shell-placeholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--theme-text);
+}
+
+/* ─── Stage B1: Temporary debug trigger ─── */
+.b1-debug-sheet-trigger {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  background: linear-gradient(135deg, var(--theme-light-vibrant), var(--theme-vibrant));
+  color: #0a0500;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 0 24px color-mix(in oklch, var(--theme-vibrant), transparent 60%);
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.b1-debug-sheet-trigger:hover { transform: scale(1.08); }
+.b1-debug-sheet-trigger:active { transform: scale(0.94); }
+
+@media (prefers-reduced-motion: reduce) {
+  .nps-sheet,
+  .nps-backdrop,
+  .listen-home,
+  .atmospheric-glow {
+    transition: none !important;
+  }
+}

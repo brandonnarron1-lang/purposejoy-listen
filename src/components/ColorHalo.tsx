@@ -1,35 +1,13 @@
-import { useState, useEffect } from 'react'
-import { FastAverageColor } from 'fast-average-color'
-
-const fac = new FastAverageColor()
+import { useTheme } from '../context/ThemeContext';
 
 interface ColorHaloProps {
-  imageSrc?: string
+  imageSrc?: string;
 }
 
-export function ColorHalo({ imageSrc }: ColorHaloProps) {
-  const [color, setColor] = useState('#1B2A4E')
-
-  useEffect(() => {
-    if (!imageSrc) {
-      setColor('#1B2A4E')
-      return
-    }
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.onload = () => {
-      try {
-        const result = fac.getColor(img, { algorithm: 'dominant', ignoredColor: [250, 247, 242, 255, 10] })
-        if (!result.error) {
-          setColor(result.hex)
-        }
-      } catch {
-        setColor('#1B2A4E')
-      }
-    }
-    img.onerror = () => setColor('#1B2A4E')
-    img.src = imageSrc
-  }, [imageSrc])
+export function ColorHalo({ imageSrc: _imageSrc }: ColorHaloProps) {
+  const { theme } = useTheme();
+  // ThemeBridge handles extraction — ColorHalo simply reads from ThemeContext
+  const color = theme.vibrant;
 
   return (
     <div
@@ -41,10 +19,10 @@ export function ColorHalo({ imageSrc }: ColorHaloProps) {
         opacity: 0.4,
         filter: 'blur(40px)',
         transform: 'scale(1.5)',
-        transition: 'background 300ms ease',
+        transition: 'background 1200ms cubic-bezier(0.4, 0, 0.2, 1)',
         pointerEvents: 'none',
         zIndex: 0,
       }}
     />
-  )
+  );
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Song } from '../types';
 import { usePlayer } from '../context/PlayerContext';
+import { useSheet } from '../context/SheetContext';
 import AtmosphericBackground from '../components/AtmosphericBackground';
 import HeroMasthead from '../components/HeroMasthead';
 import TrackCard from '../components/TrackCard';
@@ -8,6 +9,7 @@ import LyricsView from '../components/LyricsView';
 
 export function ListenHome() {
   const { currentSong } = usePlayer();
+  const { open: openSheet } = useSheet();
   const [songs, setSongs] = useState<Song[]>([]);
   const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
   const [fullscreenSlug, setFullscreenSlug] = useState<string | null>(null);
@@ -83,6 +85,15 @@ export function ListenHome() {
           />
         </div>
       )}
+
+      {/* B1 debug trigger — removed in Stage B2 */}
+      <button
+        className="b1-debug-sheet-trigger"
+        onClick={openSheet}
+        aria-label="Open now playing sheet (B1 debug)"
+      >
+        ▲
+      </button>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { usePlayer } from '../context/PlayerContext';
+import NowPlayingSheetContent from './NowPlayingSheetContent';
 
 interface Props {
   isOpen: boolean;
@@ -93,14 +94,7 @@ export default function NowPlayingSheet({ isOpen, onClose }: Props) {
           <div className="nps-handle-bar" />
         </div>
         <div className="nps-content">
-          <div className="nps-shell-placeholder">
-            <p style={{ textAlign: 'center', opacity: 0.6, fontSize: '0.875rem', padding: '2rem' }}>
-              Now Playing: {currentSong.title}
-            </p>
-            <p style={{ textAlign: 'center', opacity: 0.4, fontSize: '0.75rem', padding: '0 2rem 2rem' }}>
-              (Sheet content arriving in Stage B2)
-            </p>
-          </div>
+          <NowPlayingSheetContent />
         </div>
       </div>
     </>

@@ -1,19 +1,11 @@
 import { useState, useEffect } from 'react';
 import type { Song } from '../types';
-import { usePlayer } from '../context/PlayerContext';
-import { useSheet } from '../context/SheetContext';
 import AtmosphericBackground from '../components/AtmosphericBackground';
 import HeroMasthead from '../components/HeroMasthead';
 import TrackCard from '../components/TrackCard';
-import LyricsView from '../components/LyricsView';
 
 export function ListenHome() {
-  const { currentSong } = usePlayer();
-  const { open: openSheet } = useSheet();
   const [songs, setSongs] = useState<Song[]>([]);
-  const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
-  const [fullscreenSlug, setFullscreenSlug] = useState<string | null>(null);
-  const [fullscreenSong, setFullscreenSong] = useState<Song | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,27 +18,8 @@ export function ListenHome() {
       .catch(() => setLoading(false));
   }, []);
 
-  // When fullscreen lyrics requested, fetch full song detail (with lyrics_timed)
-  useEffect(() => {
-    if (!fullscreenSlug) {
-      setFullscreenSong(null);
-      return;
-    }
-    fetch(`/api/songs/${fullscreenSlug}`)
-      .then(r => r.json())
-      .then(setFullscreenSong)
-      .catch(() => setFullscreenSong(null));
-  }, [fullscreenSlug]);
-
   const totalSeconds = songs.reduce((sum, s) => sum + (s.duration_seconds || 0), 0);
   const totalMin = Math.floor(totalSeconds / 60);
-
-  const handleToggleExpand = (slug: string) => {
-    setExpandedSlug(prev => (prev === slug ? null : slug));
-  };
-
-  // suppress unused warning — currentSong referenced for future use
-  void currentSong;
 
   return (
     <div className="listen-home">
@@ -65,35 +38,12 @@ export function ListenHome() {
                   song={song}
                   queue={songs}
                   trackNumber={idx + 1}
-                  expanded={expandedSlug === song.slug}
-                  onToggleExpand={() => handleToggleExpand(song.slug)}
-                  onLyricsFullscreen={() => setFullscreenSlug(song.slug)}
                 />
               </li>
             ))}
           </ol>
         )}
       </main>
-
-      {/* Fullscreen lyrics overlay */}
-      {fullscreenSlug && fullscreenSong && (
-        <div className="lyrics-fullscreen-overlay">
-          <LyricsView
-            song={fullscreenSong}
-            mode="fullscreen"
-            onClose={() => setFullscreenSlug(null)}
-          />
-        </div>
-      )}
-
-      {/* B1 debug trigger — removed in Stage B2 */}
-      <button
-        className="b1-debug-sheet-trigger"
-        onClick={openSheet}
-        aria-label="Open now playing sheet (B1 debug)"
-      >
-        ▲
-      </button>
     </div>
   );
 }

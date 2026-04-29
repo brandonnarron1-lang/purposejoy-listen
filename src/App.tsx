@@ -8,6 +8,7 @@ import { InstallPrompt } from './components/InstallPrompt'
 import { LoadingSplash } from './components/LoadingSplash'
 import ThemeBridge from './components/ThemeBridge'
 import NowPlayingSheetMount from './components/NowPlayingSheetMount'
+import MiniPlayer from './components/MiniPlayer'
 import { ListenHome } from './pages/ListenHome'
 import { SongDetail } from './pages/SongDetail'
 import { PlaylistDetail } from './pages/PlaylistDetail'
@@ -62,10 +63,10 @@ export default function App() {
                 <Route path="/admin/music/:id/edit" element={<AdminSongForm />} />
               </Routes>
 
-              {/* Persistent player — rendered inside PlayerProvider, survives navigation */}
-              <PlayerBar />
-              <InstallPrompt />
+              {/* B2: MiniPlayer replaces PlayerBar; sheet + install prompt */}
+              <MiniPlayer />
               <NowPlayingSheetMount />
+              <InstallPrompt />
             </SheetProvider>
           </ThemeProvider>
         </PlayerProvider>

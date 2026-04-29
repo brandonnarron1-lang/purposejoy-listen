@@ -1,125 +1,77 @@
-import { useState, useEffect, useRef } from 'react';
-import type { Song } from '../types';
+import React from 'react';
 import { usePlayer } from '../context/PlayerContext';
-import LyricsView from './LyricsView';
-import TrackActions from './TrackActions';
+import { useSheet } from '../context/SheetContext';
+
+interface SongSummary {
+  id: string;
+  slug: string;
+  title: string;
+  artist: string;
+  cover_r2_key?: string;
+  duration_seconds?: number;
+  download_enabled?: number;
+  audio_r2_key?: string;
+}
 
 interface Props {
-  song: Song;
-  queue: Song[];
-  expanded: boolean;
-  onToggleExpand: () => void;
-  onLyricsFullscreen: () => void;
+  song: SongSummary;
+  queue: SongSummary[];
   trackNumber: number;
 }
 
-function formatDuration(seconds: number | undefined): string {
+function formatDuration(seconds?: number): string {
   if (!seconds) return '—';
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-export default function TrackCard({
-  song,
-  queue,
-  expanded,
-  onToggleExpand,
-  onLyricsFullscreen,
-  trackNumber,
-}: Props) {
-  const { currentSong, playing, play, togglePlay, seek, currentTime } = usePlayer();
-  const [fullSong, setFullSong] = useState<Song>(song);
-
-  // Scrubber drag state
-  const scrubberRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragPct, setDragPct] = useState(0);
+export default function TrackCard({ song, queue, trackNumber }: Props) {
+  const { currentSong, playing, play, pause } = usePlayer();
+  const { open: openSheet } = useSheet();
 
   const isCurrent = currentSong?.slug === song.slug;
+  const coverUrl = song.cover_r2_key ? `/api/cover/${song.cover_r2_key}` : '/brand/wordmark.png';
 
-  // Lazy-load full song detail (with lyrics_timed) when card first expands
-  useEffect(() => {
-    if (expanded && !fullSong.lyrics_timed && !fullSong.lyrics) {
-      fetch(`/api/songs/${song.slug}`)
-        .then(r => (r.ok ? r.json() : null))
-        .then(data => { if (data) setFullSong(data); })
-        .catch(() => {});
+  const handleRowClick = () => {
+    if (!isCurrent) {
+      play(song as any, queue as any);
     }
-  }, [expanded, fullSong.lyrics_timed, fullSong.lyrics, song.slug]);
+    openSheet();
+  };
 
-  const handlePlayPause = () => {
-    if (isCurrent) {
-      togglePlay();
+  const handlePlayPause = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isCurrent && playing) {
+      pause();
     } else {
-      play(song, queue);
+      play(song as any, queue as any);
     }
   };
-
-  const coverUrl = song.cover_r2_key
-    ? `/api/cover/${song.cover_r2_key}`
-    : '/brand/logo-warm.png';
-
-  const progressPct =
-    isCurrent && song.duration_seconds
-      ? (currentTime / song.duration_seconds) * 100
-      : 0;
-
-  // ── Scrubber pointer logic ──────────────────────────────────────────────
-  const getPositionPct = (clientX: number): number => {
-    const el = scrubberRef.current;
-    if (!el) return 0;
-    const rect = el.getBoundingClientRect();
-    const x = clientX - rect.left;
-    return Math.max(0, Math.min(1, x / rect.width));
-  };
-
-  const handleScrubStart = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isCurrent) return;
-    e.preventDefault();
-    setIsDragging(true);
-    const pct = getPositionPct(e.clientX);
-    setDragPct(pct);
-    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
-  };
-
-  const handleScrubMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const pct = getPositionPct(e.clientX);
-    setDragPct(pct);
-  };
-
-  const handleScrubEnd = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const pct = getPositionPct(e.clientX);
-    const seekTime = pct * (song.duration_seconds || 0);
-    seek(seekTime);
-    setIsDragging(false);
-    (e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId);
-  };
-  // ────────────────────────────────────────────────────────────────────────
-
-  const displayPct = isDragging ? dragPct * 100 : progressPct;
-  const displayTime = isDragging
-    ? dragPct * (song.duration_seconds || 0)
-    : currentTime;
 
   return (
-    <article
-      className={`track-card${expanded ? ' track-card--expanded' : ''}${isCurrent ? ' track-card--current' : ''}`}
-    >
-      {/* COLLAPSED ROW */}
+    <article className={`track-card ${isCurrent ? 'track-card--current' : ''}`}>
       <div
         className="track-card-row"
-        onClick={onToggleExpand}
+        onClick={handleRowClick}
         role="button"
         tabIndex={0}
-        onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onToggleExpand()}
-        aria-expanded={expanded}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleRowClick();
+          }
+        }}
       >
-        <div className="track-card-number">{trackNumber}</div>
+        <div className="track-card-number">
+          {isCurrent && playing ? (
+            <span className="track-card-eq" aria-label="Now playing">
+              <span /><span /><span />
+            </span>
+          ) : (
+            trackNumber
+          )}
+        </div>
         <img
           src={coverUrl}
           alt={`${song.title} cover`}
@@ -133,67 +85,20 @@ export default function TrackCard({
         </div>
         <button
           className="track-card-play"
-          onClick={e => { e.stopPropagation(); handlePlayPause(); }}
+          onClick={handlePlayPause}
           aria-label={isCurrent && playing ? 'Pause' : 'Play'}
         >
-          {isCurrent && playing ? '❙❙' : '▶'}
-        </button>
-        <div className="track-card-chevron" aria-hidden>
-          {expanded ? '▾' : '▸'}
-        </div>
-      </div>
-
-      {/* EXPANDED CONTENT */}
-      <div className="track-card-expand">
-        <div className="track-card-expand-inner">
-          <img
-            src={coverUrl}
-            alt=""
-            className="track-card-hero-cover"
-          />
-
-          {isCurrent && (
-            <div className="track-card-controls">
-              {/* Interactive scrubber with drag-to-seek */}
-              <div
-                className="track-card-scrubber"
-                ref={scrubberRef}
-                onPointerDown={handleScrubStart}
-                onPointerMove={handleScrubMove}
-                onPointerUp={handleScrubEnd}
-                onPointerCancel={handleScrubEnd}
-              >
-                <div className="track-card-scrubber-track">
-                  <div
-                    className="track-card-scrubber-fill"
-                    style={{
-                      width: `${displayPct}%`,
-                      transition: isDragging ? 'none' : undefined,
-                    }}
-                  />
-                  <div
-                    className={`track-card-scrubber-thumb${isDragging ? ' track-card-scrubber-thumb--dragging' : ''}`}
-                    style={{
-                      left: `${displayPct}%`,
-                      transition: isDragging ? 'none' : undefined,
-                    }}
-                  />
-                </div>
-                <div className="track-card-times">
-                  <span>{formatDuration(displayTime)}</span>
-                  <span>{formatDuration(song.duration_seconds)}</span>
-                </div>
-              </div>
-            </div>
+          {isCurrent && playing ? (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="5" width="4" height="14" rx="1"/>
+              <rect x="14" y="5" width="4" height="14" rx="1"/>
+            </svg>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
           )}
-
-          <LyricsView song={fullSong} mode="inline" />
-
-          <TrackActions
-            song={fullSong}
-            onLyricsFullscreen={onLyricsFullscreen}
-          />
-        </div>
+        </button>
       </div>
     </article>
   );

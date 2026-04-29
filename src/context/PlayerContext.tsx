@@ -33,6 +33,7 @@ interface PlayerContextValue extends PlayerState {
 const PlayerContext = createContext<PlayerContextValue | null>(null)
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
+  // Fix D: audio element created ONCE, never remounted
   const audioRef = useRef<HTMLAudioElement>(null!)
   const audioCtxRef = useRef<AudioContext | null>(null)
   const audioSourceRef = useRef<MediaElementAudioSourceNode | null>(null)
@@ -46,7 +47,14 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
   const currentSong = state.currentIndex >= 0 ? (state.queue[state.currentIndex] ?? null) : null
 
-  // Call once after first user interaction to wire up AudioContext
+  // Fix A: set playsinline and webkit-playsinline on mount (not valid as JSX props)
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.setAttribute('playsinline', '')
+    audio.setAttribute('webkit-playsinline', '')
+  }, [])
+
   const initAudioContext = useCallback(() => {
     if (audioCtxRef.current || !audioRef.current) return
     try {
@@ -79,19 +87,27 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     const idx = newQueue.findIndex(s => s.id === song.id)
     setState(s => ({ ...s, queue: newQueue, currentIndex: idx >= 0 ? idx : 0, playing: true }))
     logPlay(song)
-    // Init audio context on first play (requires user gesture)
     initAudioContext()
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = 'playing'
+    }
   }, [logPlay, initAudioContext])
 
   const pause = useCallback(() => {
     audioRef.current?.pause()
     setState(s => ({ ...s, playing: false }))
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = 'paused'
+    }
   }, [])
 
   const resume = useCallback(() => {
     audioRef.current?.play().catch(() => {})
     setState(s => ({ ...s, playing: true }))
     initAudioContext()
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = 'playing'
+    }
   }, [initAudioContext])
 
   const togglePlay = useCallback(() => {
@@ -115,13 +131,18 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     })
   }, [])
 
-  // Non-looping ended handler: advances to next track but stops at last
   const handleEnded = useCallback(() => {
     setState(s => {
       if (s.queue.length === 0) return s
       if (s.currentIndex >= s.queue.length - 1) {
         // Last track — stop cleanly
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.playbackState = 'none'
+        }
         return { ...s, playing: false }
+      }
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.playbackState = 'playing'
       }
       const nextIdx = s.shuffle
         ? Math.floor(Math.random() * s.queue.length)
@@ -152,23 +173,58 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     if (state.playing) audioRef.current.play().catch(() => {})
   }, [state.currentIndex]) // eslint-disable-line
 
-  // Media Session API
+  // Fix B: Media Session metadata + all handlers + playbackState on every track change
   useEffect(() => {
     if (!currentSong || !('mediaSession' in navigator)) return
+    const origin = window.location.origin
+    const coverBase = `${origin}/api/cover/${currentSong.cover_r2_key}`
     navigator.mediaSession.metadata = new MediaMetadata({
       title: currentSong.title,
       artist: currentSong.artist,
       album: currentSong.album ?? 'PurposeJoy',
-      artwork: currentSong.cover_r2_key
-        ? [{ src: `/api/cover/${currentSong.cover_r2_key}`, sizes: '512x512', type: 'image/jpeg' }]
-        : [],
+      artwork: currentSong.cover_r2_key ? [
+        { src: `${coverBase}?w=96`,  sizes: '96x96',   type: 'image/jpeg' },
+        { src: `${coverBase}?w=192`, sizes: '192x192', type: 'image/jpeg' },
+        { src: `${coverBase}?w=256`, sizes: '256x256', type: 'image/jpeg' },
+        { src: `${coverBase}?w=384`, sizes: '384x384', type: 'image/jpeg' },
+        { src: `${coverBase}?w=512`, sizes: '512x512', type: 'image/jpeg' },
+      ] : [],
     })
-    navigator.mediaSession.setActionHandler('play', () => { audioRef.current?.play().catch(()=>{}) })
+    navigator.mediaSession.setActionHandler('play', () => { audioRef.current?.play().catch(() => {}) })
     navigator.mediaSession.setActionHandler('pause', () => { audioRef.current?.pause() })
     navigator.mediaSession.setActionHandler('previoustrack', prev)
     navigator.mediaSession.setActionHandler('nexttrack', next)
-    navigator.mediaSession.setActionHandler('seekto', (d) => { if (d.seekTime != null) seek(d.seekTime) })
-  }, [currentSong, next, prev, seek])
+    navigator.mediaSession.setActionHandler('seekto', (d) => {
+      if (d.seekTime != null) seek(d.seekTime)
+    })
+    navigator.mediaSession.playbackState = state.playing ? 'playing' : 'paused'
+  }, [currentSong, next, prev, seek, state.playing])
+
+  // Fix B: Position state for lock-screen scrubber
+  const handleTimeUpdate = useCallback((e: Event) => {
+    const audio = e.target as HTMLAudioElement
+    const time = audio.currentTime
+    setState(s => ({ ...s, currentTime: time }))
+    if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
+      try {
+        navigator.mediaSession.setPositionState({
+          duration: audio.duration || 0,
+          playbackRate: audio.playbackRate || 1,
+          position: time,
+        })
+      } catch {
+        // ignore — Safari can throw if duration is NaN
+      }
+    }
+  }, [])
+
+  // Wire timeupdate via imperative listener so we can include setPositionState
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.addEventListener('timeupdate', handleTimeUpdate)
+    return () => audio.removeEventListener('timeupdate', handleTimeUpdate)
+  }, [handleTimeUpdate])
 
   return (
     <PlayerContext.Provider value={{
@@ -177,12 +233,13 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       analyserNode, initAudioContext,
     }}>
       {children}
+      {/* Fix A: preload="auto" + crossOrigin — playsinline set imperatively above */}
       <audio
         ref={audioRef}
-        onTimeUpdate={e => setState(s => ({ ...s, currentTime: (e.target as HTMLAudioElement).currentTime }))}
         onDurationChange={e => setState(s => ({ ...s, duration: (e.target as HTMLAudioElement).duration }))}
         onEnded={handleEnded}
-        preload="metadata"
+        preload="auto"
+        crossOrigin="anonymous"
       />
     </PlayerContext.Provider>
   )

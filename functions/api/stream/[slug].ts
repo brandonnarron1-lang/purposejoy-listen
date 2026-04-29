@@ -3,12 +3,19 @@ import type { Env } from '../../_types'
 export const onRequestGet = async (ctx: { params: Record<string,string>; env: Env; request: Request }) => {
   const { slug } = ctx.params
 
-  // Get audio_r2_key from DB
+  // Fetch audio_r2_key AND download_enabled for gate check
   const song = await ctx.env.DB.prepare(
-    `SELECT audio_r2_key FROM songs WHERE slug = ? AND published = 1`
-  ).bind(slug).first<{ audio_r2_key: string }>()
+    `SELECT audio_r2_key, download_enabled, title, artist FROM songs WHERE slug = ? AND published = 1`
+  ).bind(slug).first<{ audio_r2_key: string; download_enabled: number; title: string; artist: string }>()
 
   if (!song) return new Response('Not found', { status: 404 })
+
+  // Download gate — only serve Content-Disposition when download_enabled = 1
+  const url = new URL(ctx.request.url)
+  const wantsDownload = url.searchParams.get('download') === '1'
+  if (wantsDownload && song.download_enabled !== 1) {
+    return new Response('Download not enabled for this track', { status: 403 })
+  }
 
   const rangeHeader = ctx.request.headers.get('Range')
   const object = rangeHeader
@@ -24,6 +31,12 @@ export const onRequestGet = async (ctx: { params: Record<string,string>; env: En
   })
 
   if (object.size) headers.set('Content-Length', String(object.size))
+
+  if (wantsDownload) {
+    const safeTitle = song.title.replace(/[^a-zA-Z0-9 \-_]/g, '')
+    const safeArtist = song.artist.replace(/[^a-zA-Z0-9 \-_]/g, '')
+    headers.set('Content-Disposition', `attachment; filename="${safeTitle} — ${safeArtist}.mp3"`)
+  }
 
   if (rangeHeader && object.range) {
     const r = object.range as { offset: number; length: number }

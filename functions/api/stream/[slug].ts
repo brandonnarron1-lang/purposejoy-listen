@@ -42,3 +42,26 @@ function parseRange(header: string): R2Range {
   const end = m[2] ? parseInt(m[2], 10) : undefined
   return end !== undefined ? { offset, length: end - offset + 1 } : { offset }
 }
+
+// HEAD: metadata only — no body fetch, no audio bandwidth
+export const onRequestHead = async (ctx: { params: Record<string,string>; env: Env; request: Request }) => {
+  const { slug } = ctx.params
+
+  const song = await ctx.env.DB.prepare(
+    `SELECT audio_r2_key FROM songs WHERE slug = ? AND published = 1`
+  ).bind(slug).first<{ audio_r2_key: string }>()
+
+  if (!song) return new Response(null, { status: 404 })
+
+  const meta = await ctx.env.MEDIA.head(song.audio_r2_key)
+  if (!meta) return new Response(null, { status: 404 })
+
+  const headers = new Headers({
+    'Content-Type': 'audio/mpeg',
+    'Accept-Ranges': 'bytes',
+    'Cache-Control': 'public, max-age=3600',
+  })
+  if (meta.size) headers.set('Content-Length', String(meta.size))
+
+  return new Response(null, { status: 200, headers })
+}

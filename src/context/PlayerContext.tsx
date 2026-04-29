@@ -115,6 +115,21 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     })
   }, [])
 
+  // Non-looping ended handler: advances to next track but stops at last
+  const handleEnded = useCallback(() => {
+    setState(s => {
+      if (s.queue.length === 0) return s
+      if (s.currentIndex >= s.queue.length - 1) {
+        // Last track — stop cleanly
+        return { ...s, playing: false }
+      }
+      const nextIdx = s.shuffle
+        ? Math.floor(Math.random() * s.queue.length)
+        : s.currentIndex + 1
+      return { ...s, currentIndex: nextIdx, playing: true }
+    })
+  }, [])
+
   const prev = useCallback(() => {
     if (audioRef.current && audioRef.current.currentTime > 3) { seek(0); return }
     setState(s => ({ ...s, currentIndex: Math.max(0, s.currentIndex - 1), playing: true }))
@@ -166,7 +181,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         ref={audioRef}
         onTimeUpdate={e => setState(s => ({ ...s, currentTime: (e.target as HTMLAudioElement).currentTime }))}
         onDurationChange={e => setState(s => ({ ...s, duration: (e.target as HTMLAudioElement).duration }))}
-        onEnded={next}
+        onEnded={handleEnded}
         preload="metadata"
       />
     </PlayerContext.Provider>

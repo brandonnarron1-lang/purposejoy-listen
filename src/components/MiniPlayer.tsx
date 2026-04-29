@@ -1,20 +1,36 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { usePlayer } from '../context/PlayerContext';
 import { useSheet } from '../context/SheetContext';
+import { haptic } from '../hooks/useHaptic';
 
 export default function MiniPlayer() {
   const { currentSong, playing, play, pause, currentTime } = usePlayer();
   const { open } = useSheet();
+  const coverRef = useRef<HTMLImageElement>(null);
 
   if (!currentSong) return null;
 
-  const coverUrl = `/api/cover/${currentSong.cover_r2_key}`;
+  const coverUrl = currentSong.cover_r2_key
+    ? `/api/cover/${currentSong.cover_r2_key}`
+    : '/brand/wordmark.png';
   const progressPct = currentSong.duration_seconds
     ? (currentTime / currentSong.duration_seconds) * 100
     : 0;
 
+  // Phase 2: haptic + Phase 4: capture cover rect for morph animation
+  const handleOpenSheet = () => {
+    haptic('light');
+    if (coverRef.current) {
+      const rect = coverRef.current.getBoundingClientRect();
+      open({ x: rect.left, y: rect.top, width: rect.width, height: rect.height });
+    } else {
+      open();
+    }
+  };
+
   const handlePlayPause = (e: React.MouseEvent) => {
     e.stopPropagation();
+    haptic('light'); // Phase 2
     if (playing) {
       pause();
     } else {
@@ -25,14 +41,14 @@ export default function MiniPlayer() {
   return (
     <div
       className="mini-player"
-      onClick={open}
+      onClick={handleOpenSheet}
       role="button"
       tabIndex={0}
       aria-label={`Now playing: ${currentSong.title}. Tap to open full player.`}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          open();
+          handleOpenSheet();
         }
       }}
     >
@@ -44,6 +60,7 @@ export default function MiniPlayer() {
       </div>
       <div className="mini-player-content">
         <img
+          ref={coverRef}
           src={coverUrl}
           alt=""
           className={`mini-player-cover ${playing ? 'mini-player-cover--playing' : ''}`}

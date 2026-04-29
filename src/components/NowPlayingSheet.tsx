@@ -1,13 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
 import { usePlayer } from '../context/PlayerContext';
+import { haptic } from '../hooks/useHaptic';
 import NowPlayingSheetContent from './NowPlayingSheetContent';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  queue?: any[];
 }
 
-export default function NowPlayingSheet({ isOpen, onClose }: Props) {
+export default function NowPlayingSheet({ isOpen, onClose, queue = [] }: Props) {
   const { currentSong } = usePlayer();
   const sheetRef = useRef<HTMLDivElement>(null);
   const [dragY, setDragY] = useState(0);
@@ -59,6 +61,7 @@ export default function NowPlayingSheet({ isOpen, onClose }: Props) {
     const velocity = dragDistance / dragDuration;
     const dismissThreshold = window.innerHeight * 0.25;
     if (dragDistance > dismissThreshold || velocity > 0.6) {
+      haptic('light'); // Phase 2: haptic on drag-dismiss
       onClose();
     } else {
       setDragY(0);
@@ -94,7 +97,7 @@ export default function NowPlayingSheet({ isOpen, onClose }: Props) {
           <div className="nps-handle-bar" />
         </div>
         <div className="nps-content">
-          <NowPlayingSheetContent />
+          <NowPlayingSheetContent queue={queue} />
         </div>
       </div>
     </>

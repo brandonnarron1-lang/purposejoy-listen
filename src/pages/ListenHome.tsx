@@ -3,6 +3,7 @@ import type { Song } from '../types';
 import AtmosphericBackground from '../components/AtmosphericBackground';
 import HeroMasthead from '../components/HeroMasthead';
 import TrackCard from '../components/TrackCard';
+import SkeletonRow from '../components/SkeletonRow';
 
 export function ListenHome() {
   const [songs, setSongs] = useState<Song[]>([]);
@@ -29,7 +30,11 @@ export function ListenHome() {
 
       <main className="listen-main">
         {loading ? (
-          <div className="listen-loading">Loading...</div>
+          <ol className="track-list">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <li key={i}><SkeletonRow /></li>
+            ))}
+          </ol>
         ) : (
           <ol className="track-list">
             {songs.map((song, idx) => (

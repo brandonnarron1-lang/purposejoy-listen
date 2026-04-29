@@ -27,7 +27,10 @@ interface PlayerContextValue extends PlayerState {
   currentSong: Song | null
   audioRef: React.RefObject<HTMLAudioElement>
   analyserNode: AnalyserNode | null
-  initAudioContext: () => void
+  // Stage C: lazy analyser API — call ensureAnalyser only from explicit user interaction
+  ensureAnalyser: () => AnalyserNode | null
+  suspendAnalyser: () => void
+  resumeAnalyserIfNeeded: () => void
 }
 
 const PlayerContext = createContext<PlayerContextValue | null>(null)
@@ -55,8 +58,13 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     audio.setAttribute('webkit-playsinline', '')
   }, [])
 
-  const initAudioContext = useCallback(() => {
-    if (audioCtxRef.current || !audioRef.current) return
+  // Stage C: sourceConnectedRef guards against double MediaElementSource (iOS-killer if re-run)
+  const sourceConnectedRef = useRef(false)
+
+  // Stage C: ensureAnalyser — lazy init, only call from explicit user interaction, never on mount
+  const ensureAnalyser = useCallback((): AnalyserNode | null => {
+    if (sourceConnectedRef.current) return analyserRef.current
+    if (!audioRef.current) return null
     try {
       const ctx = new AudioContext()
       const source = ctx.createMediaElementSource(audioRef.current)
@@ -68,9 +76,25 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       audioCtxRef.current = ctx
       audioSourceRef.current = source
       analyserRef.current = analyser
+      sourceConnectedRef.current = true
       setAnalyserNode(analyser)
+      return analyser
     } catch {
-      // Graceful — no visualizer
+      return null
+    }
+  }, [])
+
+  // Stage C: suspendAnalyser — call when sheet closes or page hides to release audio path
+  const suspendAnalyser = useCallback(() => {
+    if (audioCtxRef.current?.state === 'running') {
+      audioCtxRef.current.suspend().catch(() => {})
+    }
+  }, [])
+
+  // Stage C: resumeAnalyserIfNeeded — call when sheet opens or page becomes visible
+  const resumeAnalyserIfNeeded = useCallback(() => {
+    if (audioCtxRef.current?.state === 'suspended') {
+      audioCtxRef.current.resume().catch(() => {})
     }
   }, [])
 
@@ -266,7 +290,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     <PlayerContext.Provider value={{
       ...state, play, pause, resume, togglePlay, next, prev,
       seek, setVolume, toggleShuffle, replay, currentSong, audioRef,
-      analyserNode, initAudioContext,
+      analyserNode, ensureAnalyser, suspendAnalyser, resumeAnalyserIfNeeded,
     }}>
       {children}
       {/* Fix A: preload="auto" + crossOrigin — playsinline set imperatively above */}

@@ -1,42 +1,100 @@
 @import "tailwindcss";
 
 /* ============================================================
-   PURPOSEJOY BRAND TOKENS — PROVISIONAL v1 DEFAULTS
-   These are operator-confirmed defaults matching PurposeJoy's
-   "Live With Purpose And Joy" tone: deep navy + warm gold.
-   Override by changing hex values below — single source of truth.
+   PURPOSEJOY BRAND TOKENS — v1.2 BRAND-CORRECTED
+   Source: purposejoy_deploy_ready/styles.css + brand inventory
+   Gold updated from provisional #E8B14A → brand canonical #D4AF37
+   Typography: Montserrat (UI) + Open Sans (body) + Cormorant Garamond (accent)
    ============================================================ */
 :root {
-  --pj-primary: #1B2A4E;    /* Deep purpose navy */
-  --pj-secondary: #E8B14A;  /* Joy gold */
-  --pj-bg: #FAF7F2;         /* Warm off-white */
-  --pj-surface: #FFFFFF;    /* White surface */
-  --pj-text: #1B2A4E;       /* Primary text (navy) */
-  --pj-muted: #5A6478;      /* Secondary text */
-  --pj-border: #E5E0D5;     /* Border / dividers */
-  --pj-player-bg: #1B2A4E;  /* Player bar (always dark) */
-  --pj-player-text: #FAF7F2;/* Player bar text (always light) */
+  /* Core palette */
+  --pj-primary: #1B2A4E;        /* Deep purpose navy — confirmed */
+  --pj-secondary: #D4AF37;      /* Joy gold — brand canonical (was #E8B14A) */
+  --pj-gold-light: #FFD750;     /* Gold bright variant — hover/glow */
+  --pj-gold-glow: rgba(212,175,55,0.32); /* Gold glow overlay */
+  --pj-gold-border: rgba(212,175,55,0.22); /* Subtle gold border */
+
+  /* Backgrounds */
+  --pj-bg: #FAF7F2;             /* Warm off-white — confirmed */
+  --pj-surface: #FFFFFF;        /* White card surface */
+  --pj-deep-dark: #0A0500;      /* Splash/modal deep dark */
+
+  /* Text */
+  --pj-text: #1B2A4E;           /* Primary text (navy) */
+  --pj-muted: #5A6478;          /* Secondary text — confirmed */
+  --pj-warm-sand: #F0DCA0;      /* Warm sand accent */
+
+  /* UI */
+  --pj-border: #E5E0D5;         /* Border / dividers */
+  --pj-player-bg: #1B2A4E;      /* Player bar */
+  --pj-player-text: #FAF7F2;    /* Player bar text */
   --player-height: 72px;
+
+  /* Typography */
+  --font-head: 'Montserrat', sans-serif;
+  --font-body: 'Open Sans', sans-serif;
+  --font-accent: 'Cormorant Garamond', serif;
+
+  /* Motion */
+  --ease: 0.3s ease;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* ============================================================
+   BASE TYPOGRAPHY
+   ============================================================ */
 html, body, #root {
   height: 100%;
   background-color: var(--pj-bg);
   color: var(--pj-text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Player bar always uses dark bg regardless of light/dark mode */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-head);
+}
+
+/* Eyebrow / label style — matching brand */
+.pj-label {
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--pj-secondary);
+}
+
+/* Track title style */
+.pj-track-title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* ============================================================
+   PLAYER BAR
+   ============================================================ */
 .player-bar-dark {
   background-color: var(--pj-player-bg) !important;
   color: var(--pj-player-text) !important;
 }
 
-/* Scrollbar */
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--pj-bg); }
-::-webkit-scrollbar-thumb { background: var(--pj-primary); border-radius: 2px; }
+::-webkit-scrollbar-thumb {
+  background: var(--pj-secondary);
+  border-radius: 2px;
+  opacity: 0.6;
+}
 
-/* Range input (seek/volume) */
+/* ============================================================
+   RANGE INPUT (seek / volume)
+   ============================================================ */
 input[type='range'] {
   -webkit-appearance: none;
   height: 4px;
@@ -44,53 +102,46 @@ input[type='range'] {
   border-radius: 2px;
   outline: none;
   cursor: pointer;
+  accent-color: var(--pj-secondary);
 }
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--pj-primary);
+  background: var(--pj-secondary);
+  box-shadow: 0 0 6px var(--pj-gold-glow);
 }
 
 /* ============================================================
-   VISUAL UPGRADE v1.1 — ANIMATION + UTILITY CLASSES
-   DO NOT MODIFY existing classes above.
+   VISUAL UPGRADE v1.1 — ANIMATIONS
    ============================================================ */
 
-/* Ken Burns effect — GPU-accelerated, pauses when not playing */
+/* Ken Burns — GPU-accelerated */
 @keyframes cover-kenburns {
   0%   { transform: scale(1.00) translate(0%, 0%); }
   50%  { transform: scale(1.06) translate(-1.5%, -1%); }
   100% { transform: scale(1.00) translate(0%, 0%); }
 }
-
 .cover-kenburns {
   animation: cover-kenburns 14s ease-in-out infinite;
   will-change: transform;
   transform-origin: center center;
 }
+.cover-kenburns.paused { animation-play-state: paused; }
 
-.cover-kenburns.paused {
-  animation-play-state: paused;
-}
-
-/* Cover pulse for currently-playing track in list */
+/* Cover pulse — currently-playing track */
 @keyframes cover-pulse {
-  0%, 100% { box-shadow: 0 0 0 0   rgba(232, 177, 74, 0.00); }
-  50%      { box-shadow: 0 0 0 8px rgba(232, 177, 74, 0.25); }
+  0%, 100% { box-shadow: 0 0 0 0   rgba(212, 175, 55, 0.00); }
+  50%      { box-shadow: 0 0 0 8px rgba(212, 175, 55, 0.28); }
 }
+.cover-pulse { animation: cover-pulse 2.4s ease-in-out infinite; }
 
-.cover-pulse {
-  animation: cover-pulse 2.4s ease-in-out infinite;
-}
-
-/* Marquee scroll for long titles in player bar */
+/* Marquee scroll */
 @keyframes marquee {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-
 .marquee-content {
   display: inline-block;
   white-space: nowrap;
@@ -98,29 +149,73 @@ input[type='range']::-webkit-slider-thumb {
   animation-delay: 1.5s;
 }
 
-/* Lyrics panel fade-gradient masks */
+/* Lyrics fade-gradient masks */
 .lyrics-fade {
   mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 8%,
-    black 92%,
-    transparent 100%
+    to bottom, transparent 0%, black 8%, black 92%, transparent 100%
   );
   -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 8%,
-    black 92%,
-    transparent 100%
+    to bottom, transparent 0%, black 8%, black 92%, transparent 100%
   );
 }
 
-/* Respect prefers-reduced-motion */
+/* ============================================================
+   BRAND PASS v1.2 — TRANSITIONS + LOADING + GLOW
+   ============================================================ */
+
+/* Modal slide-up (mobile fullscreen) */
+@keyframes modal-slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.modal-slide-up {
+  animation: modal-slide-up 0.32s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
+/* Drawer slide-in (desktop right panel) */
+@keyframes drawer-slide-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+.drawer-slide-in {
+  animation: drawer-slide-in 0.3s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
+/* Loading splash fade in/out */
+@keyframes splash-fade-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes splash-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; pointer-events: none; }
+}
+.splash-in  { animation: splash-fade-in  0.4s ease both; }
+.splash-out { animation: splash-fade-out 0.5s ease 0.1s both; }
+
+/* Gold glow on interactive elements */
+.pj-glow-gold {
+  box-shadow: 0 0 18px var(--pj-gold-glow), 0 4px 16px rgba(0,0,0,0.3);
+}
+.pj-glow-gold:hover {
+  box-shadow: 0 0 28px rgba(212,175,55,0.45), 0 4px 20px rgba(0,0,0,0.4);
+}
+
+/* Brand wordmark sizing helpers */
+.pj-wordmark-sm  { height: 20px; width: auto; object-fit: contain; }
+.pj-wordmark-md  { height: 28px; width: auto; object-fit: contain; }
+.pj-wordmark-lg  { height: 44px; width: auto; object-fit: contain; }
+
+/* Reduce-motion — all animations off */
 @media (prefers-reduced-motion: reduce) {
   .cover-kenburns,
   .cover-pulse,
-  .marquee-content {
+  .marquee-content,
+  .modal-slide-up,
+  .drawer-slide-in,
+  .splash-in,
+  .splash-out {
     animation: none !important;
+    transition: none !important;
   }
 }

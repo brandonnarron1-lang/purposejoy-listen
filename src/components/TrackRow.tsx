@@ -20,16 +20,14 @@ export function TrackRow({ song, queue, index }: TrackRowProps) {
   const isActive = currentSong?.id === song.id
   const rowRef = useRef<HTMLDivElement>(null)
 
-  // Smooth scroll to current track when it changes
+  // Smooth scroll-to-current on track change
   useEffect(() => {
     if (isActive && rowRef.current) {
       rowRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     }
   }, [isActive])
 
-  const coverSrc = song.cover_r2_key
-    ? `/api/cover/${song.cover_r2_key}`
-    : undefined
+  const coverSrc = song.cover_r2_key ? `/api/cover/${song.cover_r2_key}` : undefined
 
   return (
     <div
@@ -37,27 +35,25 @@ export function TrackRow({ song, queue, index }: TrackRowProps) {
       onClick={() => play(song, queue)}
       className="flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-all"
       style={{
-        background: isActive ? 'rgba(27,42,78,0.06)' : 'transparent',
-        borderLeft: isActive ? '4px solid #E8B14A' : '4px solid transparent',
-        marginLeft: isActive ? 0 : 0,
+        background: isActive ? 'rgba(212,175,55,0.06)' : 'transparent',
+        borderLeft: isActive ? '4px solid #D4AF37' : '4px solid transparent',
+        boxShadow: isActive ? 'inset 0 0 24px rgba(212,175,55,0.04)' : 'none',
       }}
     >
-      {/* Index / playing indicator */}
-      <div className="w-6 text-center flex-shrink-0">
+      {/* Index / now-playing indicator */}
+      <div style={{ width: 24, textAlign: 'center', flexShrink: 0 }}>
         {isActive && playing ? (
-          <span className="text-sm animate-pulse" style={{ color: '#E8B14A' }}>▶</span>
+          <span style={{ fontSize: 12, color: '#D4AF37', animation: 'pulse 1.5s ease-in-out infinite' }}>▶</span>
         ) : (
-          <span className="text-sm" style={{ color: 'var(--pj-muted)' }}>{index + 1}</span>
+          <span style={{ fontSize: 12, fontFamily: 'var(--font-head)', color: 'var(--pj-muted)', fontWeight: 400 }}>{index + 1}</span>
         )}
       </div>
 
-      {/* Cover art 96×96 */}
+      {/* Cover 64×64 with pulse on active */}
       <div
-        className="flex-shrink-0 rounded-lg overflow-hidden"
         style={{
-          width: 64,
-          height: 64,
-          position: 'relative',
+          width: 64, height: 64, flexShrink: 0,
+          borderRadius: 10, overflow: 'hidden', position: 'relative',
         }}
       >
         {coverSrc ? (
@@ -66,16 +62,10 @@ export function TrackRow({ song, queue, index }: TrackRowProps) {
             alt=""
             loading="lazy"
             className={isActive && playing ? 'cover-pulse' : ''}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.3s ease' }}
           />
         ) : (
-          <div
-            style={{
-              width: '100%', height: '100%',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'var(--pj-surface)', fontSize: 24,
-            }}
-          >
+          <div style={{ width: '100%', height: '100%', background: 'var(--pj-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24 }}>
             ♪
           </div>
         )}
@@ -83,20 +73,44 @@ export function TrackRow({ song, queue, index }: TrackRowProps) {
 
       {/* Title / artist */}
       <div className="flex-1 min-w-0">
+        {isActive && (
+          <p className="pj-label" style={{ margin: '0 0 2px', fontSize: '0.6rem' }}>
+            Now Playing
+          </p>
+        )}
         <p
-          className="text-sm font-semibold truncate"
-          style={{ color: isActive ? '#E8B14A' : 'var(--pj-text)' }}
+          className="pj-track-title"
+          style={{
+            color: isActive ? '#D4AF37' : 'var(--pj-text)',
+            fontSize: 14,
+            margin: 0,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            letterSpacing: isActive ? '0.01em' : '0',
+          }}
         >
           {song.title}
         </p>
-        <p className="text-xs truncate" style={{ color: 'var(--pj-muted)' }}>
+        <p style={{
+          fontFamily: 'var(--font-head)',
+          fontSize: 11,
+          fontWeight: 400,
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          color: 'var(--pj-muted)',
+          margin: '3px 0 0',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}>
           {song.artist}
         </p>
       </div>
 
       {/* Duration */}
       {song.duration_seconds && (
-        <span className="text-xs flex-shrink-0" style={{ color: 'var(--pj-muted)' }}>
+        <span style={{ fontSize: 12, fontFamily: 'var(--font-head)', fontWeight: 400, letterSpacing: '0.06em', color: 'var(--pj-muted)', flexShrink: 0 }}>
           {fmt(song.duration_seconds)}
         </span>
       )}

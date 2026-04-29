@@ -639,3 +639,222 @@ input[type='range']::-webkit-slider-thumb {
     animation: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   HERO MASTHEAD — Hyperrealistic Sunrise
+   ═══════════════════════════════════════════════════════ */
+
+.hero-masthead {
+  position: relative;
+  width: 100%;
+  min-height: 60vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+}
+@media (min-width: 768px) {
+  .hero-masthead {
+    min-height: 70vh;
+    padding: 6rem 2rem;
+  }
+}
+
+/* Hero photograph */
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hero-photo--loaded {
+  opacity: 1;
+}
+.hero-photo picture,
+.hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 65%;
+  filter: brightness(0.55) saturate(1.15);
+  display: block;
+}
+
+/* Ken Burns drift on hero */
+@keyframes hero-drift {
+  0%, 100% { transform: scale(1.0) translate(0, 0); }
+  50%       { transform: scale(1.08) translate(-1%, 1%); }
+}
+.hero-photo--loaded img {
+  animation: hero-drift 30s ease-in-out infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo--loaded img { animation: none; }
+  .hero-photo { transition: none; }
+}
+
+/* Warm gradient overlay for text legibility */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(26, 12, 0, 0.85) 0%, rgba(26, 12, 0, 0.4) 50%, transparent 80%),
+    linear-gradient(180deg, rgba(26, 12, 0, 0.35) 0%, rgba(26, 12, 0, 0.15) 40%, rgba(26, 12, 0, 0.5) 100%);
+  pointer-events: none;
+}
+
+/* Masthead content */
+.hero-masthead-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 520px;
+}
+
+.hero-flourish-top,
+.hero-flourish-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.875rem;
+  color: #D4AF37;
+  font-size: 0.875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-family: 'Open Sans', sans-serif;
+  margin: 0.25rem 0;
+}
+.hero-flourish-line {
+  height: 1px;
+  width: 32px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+}
+.hero-flourish-diamond {
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+.hero-flourish-star {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  color: #FFD750;
+}
+.hero-meta-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(255, 215, 80, 0.92);
+}
+
+.hero-wordmark {
+  width: 200px;
+  height: auto;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 24px rgba(212, 175, 55, 0.15));
+  margin: 0.5rem 0;
+}
+@media (min-width: 768px) {
+  .hero-wordmark { width: 280px; }
+}
+
+.hero-artist {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #FFF0D6;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+  margin: 0;
+}
+@media (min-width: 768px) {
+  .hero-artist { font-size: 1.125rem; }
+}
+
+.hero-tagline {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.625rem;
+  line-height: 1.3;
+  letter-spacing: 0.005em;
+  color: #FFF0D6;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.75);
+  margin: 0.5rem 0 0.75rem;
+}
+@media (min-width: 768px) {
+  .hero-tagline { font-size: 2.25rem; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ATMOSPHERIC GLOW — subtle per-track accent
+   ═══════════════════════════════════════════════════════ */
+.atmospheric-glow {
+  position: fixed;
+  bottom: -20%;
+  left: -10%;
+  right: -10%;
+  height: 60vh;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(212, 175, 55, 0.18) 0%,
+    rgba(232, 150, 58, 0.08) 35%,
+    transparent 70%
+  );
+  pointer-events: none;
+  filter: blur(60px);
+  transition: opacity 800ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Page background override — deep warm dark gradient */
+.listen-home {
+  background: linear-gradient(180deg, #0F0703 0%, #1A0C00 60%, #0F0703 100%);
+}
+
+/* Pull back active track ring — let covers sing */
+.track-card--current {
+  background: rgba(255, 240, 214, 0.04);
+}
+.track-card--current .track-card-thumb {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCRUBBER DRAG THUMB
+   ═══════════════════════════════════════════════════════ */
+.track-card-scrubber {
+  cursor: pointer;
+  padding: 12px 0;
+  margin: -12px 0;
+  touch-action: none;
+}
+.track-card-scrubber-track {
+  position: relative;
+}
+.track-card-scrubber-thumb {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(135deg, #FFD750 0%, #D4AF37 100%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition:
+    width 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    height 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    left 200ms linear;
+  pointer-events: none;
+}
+.track-card-scrubber-thumb--dragging {
+  width: 18px;
+  height: 18px;
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.8), 0 2px 6px rgba(0, 0, 0, 0.4);
+}

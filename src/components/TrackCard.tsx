@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { Song } from '../types';
 import { usePlayer } from '../context/PlayerContext';
 import LyricsView from './LyricsView';
@@ -28,8 +28,13 @@ export default function TrackCard({
   onLyricsFullscreen,
   trackNumber,
 }: Props) {
-  const { currentSong, playing, play, togglePlay, currentTime } = usePlayer();
+  const { currentSong, playing, play, togglePlay, seek, currentTime } = usePlayer();
   const [fullSong, setFullSong] = useState<Song>(song);
+
+  // Scrubber drag state
+  const scrubberRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragPct, setDragPct] = useState(0);
 
   const isCurrent = currentSong?.slug === song.slug;
 
@@ -59,6 +64,47 @@ export default function TrackCard({
     isCurrent && song.duration_seconds
       ? (currentTime / song.duration_seconds) * 100
       : 0;
+
+  // ── Scrubber pointer logic ──────────────────────────────────────────────
+  const getPositionPct = (clientX: number): number => {
+    const el = scrubberRef.current;
+    if (!el) return 0;
+    const rect = el.getBoundingClientRect();
+    const x = clientX - rect.left;
+    return Math.max(0, Math.min(1, x / rect.width));
+  };
+
+  const handleScrubStart = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isCurrent) return;
+    e.preventDefault();
+    setIsDragging(true);
+    const pct = getPositionPct(e.clientX);
+    setDragPct(pct);
+    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+  };
+
+  const handleScrubMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const pct = getPositionPct(e.clientX);
+    setDragPct(pct);
+  };
+
+  const handleScrubEnd = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const pct = getPositionPct(e.clientX);
+    const seekTime = pct * (song.duration_seconds || 0);
+    seek(seekTime);
+    setIsDragging(false);
+    (e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId);
+  };
+  // ────────────────────────────────────────────────────────────────────────
+
+  const displayPct = isDragging ? dragPct * 100 : progressPct;
+  const displayTime = isDragging
+    ? dragPct * (song.duration_seconds || 0)
+    : currentTime;
 
   return (
     <article
@@ -108,15 +154,33 @@ export default function TrackCard({
 
           {isCurrent && (
             <div className="track-card-controls">
-              <div className="track-card-scrubber">
+              {/* Interactive scrubber with drag-to-seek */}
+              <div
+                className="track-card-scrubber"
+                ref={scrubberRef}
+                onPointerDown={handleScrubStart}
+                onPointerMove={handleScrubMove}
+                onPointerUp={handleScrubEnd}
+                onPointerCancel={handleScrubEnd}
+              >
                 <div className="track-card-scrubber-track">
                   <div
                     className="track-card-scrubber-fill"
-                    style={{ width: `${progressPct}%` }}
+                    style={{
+                      width: `${displayPct}%`,
+                      transition: isDragging ? 'none' : undefined,
+                    }}
+                  />
+                  <div
+                    className={`track-card-scrubber-thumb${isDragging ? ' track-card-scrubber-thumb--dragging' : ''}`}
+                    style={{
+                      left: `${displayPct}%`,
+                      transition: isDragging ? 'none' : undefined,
+                    }}
                   />
                 </div>
                 <div className="track-card-times">
-                  <span>{formatDuration(currentTime)}</span>
+                  <span>{formatDuration(displayTime)}</span>
                   <span>{formatDuration(song.duration_seconds)}</span>
                 </div>
               </div>

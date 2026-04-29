@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { Song } from '../types';
 import { usePlayer } from '../context/PlayerContext';
 import AtmosphericBackground from '../components/AtmosphericBackground';
+import HeroMasthead from '../components/HeroMasthead';
 import TrackCard from '../components/TrackCard';
 import LyricsView from '../components/LyricsView';
 
@@ -42,25 +43,14 @@ export function ListenHome() {
     setExpandedSlug(prev => (prev === slug ? null : slug));
   };
 
-  const fallbackCover = songs[0]?.cover_r2_key
-    ? `/api/cover/${songs[0].cover_r2_key}`
-    : undefined;
+  // suppress unused warning — currentSong referenced for future use
+  void currentSong;
 
   return (
     <div className="listen-home">
-      <AtmosphericBackground fallbackCoverUrl={fallbackCover} />
+      <AtmosphericBackground />
 
-      <header className="listen-hero">
-        <img
-          src="/brand/wordmark.png"
-          alt="PurposeJoy"
-          className="listen-hero-wordmark"
-        />
-        <p className="listen-hero-tagline">Live with purpose and joy.</p>
-        <p className="listen-hero-meta">
-          Mike Eatmon · {songs.length} originals · {totalMin} min
-        </p>
-      </header>
+      <HeroMasthead trackCount={songs.length} totalMinutes={totalMin} />
 
       <main className="listen-main">
         {loading ? (

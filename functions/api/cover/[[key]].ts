@@ -1,7 +1,9 @@
 import type { Env } from '../../_types'
 
+type Ctx = { params: Record<string, string | string[]>; env: Env; request: Request }
+
 // Route: /api/cover/:key  (catch-all — key may contain slashes, e.g. "art/sng_xxx.png")
-export const onRequestGet = async (ctx: { params: Record<string,string|string[]>; env: Env }) => {
+async function handleCover(ctx: Ctx): Promise<Response> {
   const raw = ctx.params.key
   if (!raw) return new Response('Missing key', { status: 400 })
 
@@ -12,11 +14,19 @@ export const onRequestGet = async (ctx: { params: Record<string,string|string[]>
   if (!object) return new Response('Not found', { status: 404 })
 
   const contentType = object.httpMetadata?.contentType ?? 'image/png'
-  return new Response(object.body, {
-    headers: {
-      'Content-Type': contentType,
-      'Cache-Control': 'public, max-age=2592000, immutable',
-      'Access-Control-Allow-Origin': '*',
-    },
-  })
+  const headers = {
+    'Content-Type': contentType,
+    'Cache-Control': 'public, max-age=2592000, immutable',
+    'Access-Control-Allow-Origin': '*',
+  }
+
+  // HEAD: return headers only, no body
+  if (ctx.request.method === 'HEAD') {
+    return new Response(null, { headers })
+  }
+
+  return new Response(object.body, { headers })
 }
+
+export const onRequestGet = handleCover
+export const onRequestHead = handleCover

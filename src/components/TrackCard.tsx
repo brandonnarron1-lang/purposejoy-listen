@@ -27,7 +27,8 @@ function formatDuration(seconds?: number): string {
 }
 
 export default function TrackCard({ song, queue, trackNumber }: Props) {
-  const { currentSong, playing, play, pause } = usePlayer();
+  const { currentSong, playing, play, pause, cachedSlugs } = usePlayer();
+  const isCached = cachedSlugs?.has(song.slug) ?? false;
   const { open: openSheet } = useSheet();
 
   const isCurrent = currentSong?.slug === song.slug;
@@ -80,7 +81,10 @@ export default function TrackCard({ song, queue, trackNumber }: Props) {
         />
         <div className="track-card-meta">
           {isCurrent && <div className="track-card-eyebrow">NOW PLAYING</div>}
-          <div className="track-card-title">{song.title}</div>
+          <div className="track-card-title">
+            {song.title}
+            {isCached && <span className="track-card-cached-badge" aria-label="Available offline">✓</span>}
+          </div>
           <div className="track-card-duration">{formatDuration(song.duration_seconds)}</div>
         </div>
         <button

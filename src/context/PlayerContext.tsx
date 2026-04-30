@@ -31,6 +31,9 @@ interface PlayerContextValue extends PlayerState {
   ensureAnalyser: () => AnalyserNode | null
   suspendAnalyser: () => void
   resumeAnalyserIfNeeded: () => void
+  // Offline cache state
+  cachedSlugs: Set<string>
+  refreshCacheState: () => Promise<void>
 }
 
 const PlayerContext = createContext<PlayerContextValue | null>(null)
@@ -42,6 +45,30 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const audioSourceRef = useRef<MediaElementAudioSourceNode | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
   const [analyserNode, setAnalyserNode] = useState<AnalyserNode | null>(null)
+
+  const [cachedSlugs, setCachedSlugs] = useState<Set<string>>(new Set())
+
+  const refreshCacheState = useCallback(async () => {
+    if (!('caches' in window)) return
+    try {
+      const cache = await caches.open('audio-cache')
+      const keys = await cache.keys()
+      const slugs = new Set<string>()
+      keys.forEach((req) => {
+        const m = new URL(req.url).pathname.match(/^\/api\/stream\/([^?/]+)/)
+        if (m) slugs.add(m[1])
+      })
+      setCachedSlugs(slugs)
+    } catch {
+      // No cache or quota error — silently no-op
+    }
+  }, [])
+
+  useEffect(() => {
+    refreshCacheState()
+    const interval = setInterval(refreshCacheState, 30000)
+    return () => clearInterval(interval)
+  }, [refreshCacheState])
 
   const [state, setState] = useState<PlayerState>({
     queue: [], currentIndex: -1, playing: false,
@@ -291,6 +318,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       ...state, play, pause, resume, togglePlay, next, prev,
       seek, setVolume, toggleShuffle, replay, currentSong, audioRef,
       analyserNode, ensureAnalyser, suspendAnalyser, resumeAnalyserIfNeeded,
+      cachedSlugs, refreshCacheState,
     }}>
       {children}
       {/* Fix A: preload="auto" + crossOrigin — playsinline set imperatively above */}

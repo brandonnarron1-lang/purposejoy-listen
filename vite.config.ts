@@ -29,7 +29,20 @@ export default defineConfig({
           },
           {
             urlPattern: /^\/api\/stream\//,
-            handler: 'NetworkOnly',
+            handler: 'CacheFirst',
+            method: 'GET',
+            options: {
+              cacheName: 'audio-cache',
+              rangeRequests: true,
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 30 * 24 * 60 * 60,
+                purgeOnQuotaError: true,
+              },
+              cacheableResponse: {
+                statuses: [200, 206],
+              },
+            },
           },
         ],
         navigateFallback: '/index.html',

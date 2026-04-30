@@ -1213,6 +1213,179 @@ input[type='range']::-webkit-slider-thumb {
 }
 .install-prompt-close:hover { color: var(--theme-text); }
 
+/* iOS banner — make the whole thing a button */
+.install-prompt--ios {
+  border: none;
+  padding: 0;
+  width: calc(100% - 1.5rem);
+  text-align: left;
+  cursor: pointer;
+}
+.install-prompt--ios:hover,
+.install-prompt--ios:active {
+  filter: brightness(1.1);
+}
+
+/* ─── iOS Install Guide Overlay ─── */
+.install-guide-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(10, 5, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: install-prompt-in 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.install-guide-card {
+  background: linear-gradient(180deg, #1A0C00 0%, #0F0703 100%);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-bottom: none;
+  border-radius: 20px 20px 0 0;
+  padding: 1.5rem 1.5rem 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+.install-guide-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  color: #FFF0D6;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.install-guide-appicon {
+  border-radius: 14px;
+  margin-bottom: 0.875rem;
+}
+.install-guide-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 1.375rem;
+  color: #FFD750;
+  margin: 0 0 0.25rem;
+  text-align: center;
+}
+.install-guide-subtitle {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.875rem;
+  color: rgba(255,240,214,0.6);
+  margin: 0 0 1.5rem;
+  text-align: center;
+}
+.install-guide-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.install-guide-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  background: rgba(212,175,55,0.07);
+  border: 1px solid rgba(212,175,55,0.18);
+  border-radius: 12px;
+  padding: 0.875rem;
+}
+.install-guide-step-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD750, #D4AF37);
+  color: #0F0703;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.install-guide-step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  flex: 1;
+}
+.install-guide-step-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: #FFF0D6;
+}
+.install-guide-step-action {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #FFD750;
+}
+.install-guide-step-hint {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.8125rem;
+  color: rgba(255,240,214,0.55);
+}
+.install-guide-share-svg {
+  width: 52px;
+  height: 52px;
+  margin-top: 0.25rem;
+}
+.install-guide-arrow-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+}
+.install-guide-arrow-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.75rem;
+  color: rgba(212,175,55,0.7);
+  letter-spacing: 0.03em;
+}
+.install-guide-arrow-svg {
+  width: 24px;
+  height: 40px;
+  animation: guide-arrow-bounce 1.2s ease-in-out infinite;
+}
+@keyframes guide-arrow-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+.install-guide-done {
+  width: 100%;
+  background: linear-gradient(135deg, #FFD750, #D4AF37);
+  color: #0F0703;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.875rem;
+  cursor: pointer;
+  transition: filter 150ms ease;
+}
+.install-guide-done:active { filter: brightness(0.9); }
+
 /* ─── Track Actions ─── */
 .track-actions {
   display: flex;

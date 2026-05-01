@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0C0618">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PurposeJoyListen">
+<meta name="application-name" content="PurposeJoyListen">
+
+<title>Install PurposeJoyListen</title>
+
+<!-- Open Graph (iMessage / Facebook / LinkedIn preview) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Install PurposeJoyListen">
+<meta property="og:site_name" content="PurposeJoyListen">
+<meta property="og:description" content="Songs by Mike Eatmon. Tap to add to your home screen.">
+<meta property="og:image" content="https://listen.purposejoy.org/install/install-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://listen.purposejoy.org/install">
+
+<!-- Twitter / X card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Install PurposeJoyListen">
+<meta name="twitter:description" content="Songs by Mike Eatmon. Tap to add to your home screen.">
+<meta name="twitter:image" content="https://listen.purposejoy.org/install/install-og.jpg">
+
+<!-- Icons -->
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=2">
+<link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png?v=2">
+<link rel="apple-touch-icon-precomposed" href="/icons/apple-touch-icon.png?v=2">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="manifest" href="/manifest.webmanifest">
+
+<!-- iOS splash -->
+<link rel="apple-touch-startup-image"
+      media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)"
+      href="/splash/apple-touch-startup-iphone-8.png">
+<link rel="apple-touch-startup-image"
+      media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)"
+      href="/splash/apple-touch-startup-iphone-13.png">
+<link rel="apple-touch-startup-image"
+      media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)"
+      href="/splash/apple-touch-startup-iphone-15-pro-max.png">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100vh; min-height: 100dvh; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: #0C0618;
+    background-image:
+      radial-gradient(ellipse at top, rgba(138, 43, 226, 0.25) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(138, 43, 226, 0.15) 0%, transparent 60%),
+      linear-gradient(180deg, #0C0618 0%, #1a0d2e 50%, #0C0618 100%);
+    color: #FFF0D6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .icon-wrap {
+    width: 144px;
+    height: 144px;
+    border-radius: 32px;
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+    box-shadow:
+      0 16px 48px rgba(138, 43, 226, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+    animation: icon-float 3s ease-in-out infinite;
+  }
+  .icon-wrap img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  @keyframes icon-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.5rem;
+    line-height: 1.05;
+  }
+  .gold { color: #FFD750; }
+
+  .tagline {
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(255, 240, 214, 0.7);
+    margin: 0 0 2rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* Primary CTA — used by Chrome family */
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 320px;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #FFD750 0%, #D4AF37 100%);
+    color: #0C0618;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    box-shadow: 0 12px 32px rgba(212, 175, 55, 0.35);
+    transition: transform 150ms ease, box-shadow 150ms ease;
+    -webkit-appearance: none;
+    appearance: none;
+    text-decoration: none;
+  }
+  .cta-primary:active {
+    transform: translateY(2px);
+    box-shadow: 0 6px 18px rgba(212, 175, 55, 0.3);
+  }
+  .cta-primary[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* iOS guide block */
+  .ios-guide {
+    width: 100%;
+    max-width: 360px;
+    margin-top: 0.5rem;
+  }
+  .ios-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem 0.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: left;
+  }
+  .ios-step:last-child { border-bottom: none; }
+  .ios-step-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFD750 0%, #D4AF37 100%);
+    color: #0C0618;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 12px rgba(255, 215, 80, 0.3);
+  }
+  .ios-step-text {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    padding-top: 0.3rem;
+  }
+  .ios-step-text b {
+    color: #FFD750;
+    font-weight: 600;
+  }
+  .ios-step-icon {
+    width: 24px;
+    height: 24px;
+    vertical-align: -0.4em;
+    margin: 0 0.15em;
+  }
+
+  .arrow-down-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    color: rgba(255, 215, 80, 0.85);
+    animation: arrow-bounce 1.6s ease-in-out infinite;
+  }
+  .arrow-down-hint svg {
+    width: 32px;
+    height: 32px;
+  }
+  @keyframes arrow-bounce {
+    0%, 100% { transform: translateY(0); opacity: 0.85; }
+    50% { transform: translateY(8px); opacity: 1; }
+  }
+
+  .info-block {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    font-size: 0.875rem;
+    color: rgba(255, 240, 214, 0.7);
+    line-height: 1.5;
+  }
+  .info-block a {
+    color: #FFD750;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .secondary-link {
+    margin-top: 1.5rem;
+    color: rgba(255, 240, 214, 0.5);
+    font-size: 0.875rem;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 240, 214, 0.2);
+    padding-bottom: 0.125rem;
+  }
+
+  /* Hide all sections by default — JS reveals one */
+  .platform-section { display: none; }
+  .platform-section.active { display: flex; flex-direction: column; align-items: center; width: 100%; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .icon-wrap, .arrow-down-hint { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="icon-wrap">
+    <img src="/icons/icon-512.png?v=2" alt="PurposeJoyListen" width="144" height="144">
+  </div>
+
+  <h1>Install <span class="gold">PurposeJoyListen</span></h1>
+  <p class="tagline">Songs by Mike Eatmon</p>
+
+  <!-- Section: iOS Safari -->
+  <section class="platform-section" id="section-ios">
+    <p style="margin: 0 0 1.5rem; font-size: 0.95rem; color: rgba(255, 240, 214, 0.85);">
+      Two taps to add to your home screen
+    </p>
+
+    <div class="ios-guide">
+      <div class="ios-step">
+        <div class="ios-step-num">1</div>
+        <div class="ios-step-text">
+          Tap the
+          <svg class="ios-step-icon" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <rect x="6" y="10" width="12" height="11" rx="2" stroke="#FFD750" stroke-width="1.6"/>
+            <path d="M12 14V3M12 3L8 7M12 3L16 7" stroke="#FFD750" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <b>Share</b> button at the bottom of Safari
+        </div>
+      </div>
+      <div class="ios-step">
+        <div class="ios-step-num">2</div>
+        <div class="ios-step-text">
+          Scroll down → tap <b>Add to Home Screen</b> → tap <b>Add</b>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-down-hint">
+      <span>Share button is at the bottom</span>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d="M12 4V20M12 20L6 14M12 20L18 14" stroke="#FFD750" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Section: Chrome / Edge / Android — native install button -->
+  <section class="platform-section" id="section-native">
+    <p style="margin: 0 0 1.5rem; font-size: 0.95rem; color: rgba(255, 240, 214, 0.85);">
+      One tap to install
+    </p>
+
+    <button id="native-install-btn" class="cta-primary">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden style="vertical-align: -0.2em;">
+        <path d="M12 4V16M12 16L7 11M12 16L17 11M5 20H19" stroke="#0C0618" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Install PurposeJoyListen
+    </button>
+
+    <p style="margin-top: 1rem; font-size: 0.8125rem; color: rgba(255, 240, 214, 0.5);">
+      Installs as an app on your device · ~1 MB
+    </p>
+  </section>
+
+  <!-- Section: Already installed — auto-redirects -->
+  <section class="platform-section" id="section-installed">
+    <p style="margin: 0 0 1.5rem; font-size: 0.95rem; color: rgba(255, 240, 214, 0.85);">
+      You're already installed. Opening the app...
+    </p>
+    <a href="/listen" class="cta-primary">Open PurposeJoyListen</a>
+  </section>
+
+  <!-- Section: Other browsers (Firefox, etc) — fallback -->
+  <section class="platform-section" id="section-other">
+    <div class="info-block">
+      <strong style="color: #FFF0D6;">For the best install experience:</strong><br>
+      Open this link in <strong>Safari (iPhone)</strong> or <strong>Chrome (Android &amp; desktop)</strong>.
+    </div>
+    <a href="/listen" class="cta-primary" style="margin-top: 1.5rem;">
+      Listen in browser instead
+    </a>
+  </section>
+
+  <!-- Section: Loading (default before JS detection) -->
+  <section class="platform-section active" id="section-loading">
+    <p style="color: rgba(255, 240, 214, 0.5); margin: 1rem 0;">Detecting your device...</p>
+  </section>
+
+  <a href="/listen" class="secondary-link">or just listen in your browser</a>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── Detection helpers ───────────────────────────────
+  function isStandalone() {
+    if (window.navigator.standalone) return true; // iOS
+    if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
+    return false;
+  }
+
+  function isIOSSafari() {
+    var ua = navigator.userAgent;
+    var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    var isSafari = /^((?!chrome|android|crios|fxios|edgios).)*safari/i.test(ua);
+    return isIOS && isSafari;
+  }
+
+  function isIOSNonSafari() {
+    var ua = navigator.userAgent;
+    var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    return isIOS && !isIOSSafari();
+  }
+
+  function showSection(id) {
+    var sections = document.querySelectorAll('.platform-section');
+    for (var i = 0; i < sections.length; i++) {
+      sections[i].classList.remove('active');
+    }
+    var target = document.getElementById(id);
+    if (target) target.classList.add('active');
+  }
+
+  // ── Standalone (already installed) — bounce to /listen ──
+  if (isStandalone()) {
+    showSection('section-installed');
+    setTimeout(function () {
+      window.location.replace('/listen');
+    }, 800);
+    return;
+  }
+
+  // ── iOS Safari — show manual guide ───────────────────
+  if (isIOSSafari()) {
+    showSection('section-ios');
+    return;
+  }
+
+  // ── iOS non-Safari (Chrome iOS, etc) — tell them to open in Safari ──
+  if (isIOSNonSafari()) {
+    document.getElementById('section-other').innerHTML =
+      '<div class="info-block">' +
+      '<strong style="color: #FFF0D6;">Open this link in Safari to install</strong><br>' +
+      'iOS only allows Add to Home Screen from Safari. Copy the URL and paste it into Safari to continue.' +
+      '</div>' +
+      '<a href="/listen" class="cta-primary" style="margin-top: 1.5rem;">Listen in browser instead</a>';
+    showSection('section-other');
+    return;
+  }
+
+  // ── Chrome family (Android + desktop) — capture beforeinstallprompt ──
+  var deferredPrompt = null;
+  var btn = document.getElementById('native-install-btn');
+
+  // Set up the listener BEFORE potentially showing the section
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    showSection('section-native');
+    if (btn) btn.disabled = false;
+  });
+
+  // If beforeinstallprompt has already fired (cached PWA criteria), show native section optimistically
+  // Otherwise, show a placeholder while we wait
+  setTimeout(function () {
+    if (!deferredPrompt && document.getElementById('section-loading').classList.contains('active')) {
+      // Still loading after 1.5s — likely an unsupported browser or PWA criteria not met
+      // Fall through to "other"
+      showSection('section-other');
+    }
+  }, 1500);
+
+  // If we're on a Chromium-based browser at all, pre-show the native section
+  // The button will be enabled once beforeinstallprompt fires
+  var ua = navigator.userAgent;
+  var isChromium = /Chrome|Edg|Edge|OPR|SamsungBrowser/i.test(ua) && !/iPhone|iPad|iPod/.test(ua);
+  if (isChromium) {
+    showSection('section-native');
+    if (btn) btn.disabled = true; // until beforeinstallprompt fires
+  }
+
+  // Wire up the install button
+  if (btn) {
+    btn.addEventListener('click', function () {
+      if (!deferredPrompt) {
+        // beforeinstallprompt never fired — fallback message
+        alert('Install isn\'t available right now. Try opening this link in Chrome or Edge.');
+        return;
+      }
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function (choice) {
+        deferredPrompt = null;
+        if (choice.outcome === 'accepted') {
+          // Will redirect once standalone detection picks up the install
+          setTimeout(function () { window.location.replace('/listen'); }, 500);
+        }
+      });
+    });
+  }
+
+  // Listen for appinstalled to auto-redirect
+  window.addEventListener('appinstalled', function () {
+    setTimeout(function () { window.location.replace('/listen'); }, 600);
+  });
+})();
+</script>
+
+</body>
+</html>

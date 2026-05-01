@@ -238,22 +238,83 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const song = state.queue[state.currentIndex]
     if (!song || !audioRef.current) return
-    audioRef.current.src = `/api/stream/${song.slug}`
-    audioRef.current.volume = state.volume
-    if (state.playing) {
-      // Fix A: Resume AudioContext if initialized and suspended before play()
+    const audio = audioRef.current
+    const newSrc = `/api/stream/${song.slug}`
+
+    // Only reset src if it actually changed — avoids re-buffering same track
+    const currentSrcPath = audio.src
+      ? new URL(audio.src, window.location.origin).pathname
+      : ''
+    if (currentSrcPath !== newSrc) {
+      audio.src = newSrc
+      // Fix SW+iOS: explicit load() forces loadedmetadata to fire even when
+      // SW serves from audio-cache (readyState stays 0 without this)
+      audio.load()
+    }
+    audio.volume = state.volume
+
+    if (!state.playing) return
+
+    ;(async () => {
+      // Fix A: Resume AudioContext if initialized and suspended
       if (audioCtxRef.current?.state === 'suspended') {
         audioCtxRef.current.resume().catch(() => {})
       }
-      // Fix B: Set playbackState AFTER play() Promise resolves (iOS requirement)
-      audioRef.current.play()
-        .then(() => {
-          if ('mediaSession' in navigator) {
-            navigator.mediaSession.playbackState = 'playing'
-          }
-        })
-        .catch(() => {})
-    }
+
+      // Fix SW+iOS: wait for HAVE_METADATA before play() so MediaSession
+      // gets a valid duration to bind on the lock screen
+      await new Promise<void>((resolve) => {
+        if (audio.readyState >= 1) {
+          resolve()
+        } else {
+          const onMeta = () => resolve()
+          audio.addEventListener('loadedmetadata', onMeta, { once: true })
+          // Safety net: don't hang if metadata never arrives
+          setTimeout(() => {
+            audio.removeEventListener('loadedmetadata', onMeta)
+            resolve()
+          }, 1500)
+        }
+      })
+
+      // Fix B: play() BEFORE MediaSession setup — iOS standalone requires this order
+      try {
+        await audio.play()
+      } catch {
+        return // autoplay blocked — swallow, user must interact again
+      }
+
+      if (!('mediaSession' in navigator)) return
+      navigator.mediaSession.playbackState = 'playing'
+
+      // Fix SW+iOS: set MediaSession metadata AFTER play() resolves so iOS
+      // standalone mode binds lock-screen controls to the active audio element
+      const origin = window.location.origin
+      const coverBase = `${origin}/api/cover/${song.cover_r2_key}`
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: song.title,
+        artist: song.artist,
+        album: (song as any).album ?? 'PurposeJoy',
+        artwork: song.cover_r2_key ? [
+          { src: `${coverBase}?w=96`,  sizes: '96x96',   type: 'image/jpeg' },
+          { src: `${coverBase}?w=192`, sizes: '192x192', type: 'image/jpeg' },
+          { src: `${coverBase}?w=512`, sizes: '512x512', type: 'image/jpeg' },
+        ] : [],
+      })
+
+      // setPositionState guarded against NaN/Infinity — iOS Safari throws on bad values
+      if (isFinite(audio.duration) && !isNaN(audio.duration) && audio.duration > 0) {
+        try {
+          navigator.mediaSession.setPositionState({
+            duration: audio.duration,
+            playbackRate: audio.playbackRate || 1,
+            position: Math.min(audio.currentTime || 0, audio.duration),
+          })
+        } catch {
+          // ignore — some Safari versions reject
+        }
+      }
+    })()
   }, [state.currentIndex]) // eslint-disable-line
 
   // Fix B: Media Session metadata + all handlers + playbackState on every track change
@@ -304,6 +365,27 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       }
     }
   }, [])
+
+  // J4.4: Pre-warm next track audio cache 5s into current track
+  useEffect(() => {
+    if (!currentSong || state.queue.length === 0) return
+    const idx = state.queue.findIndex(s => s.slug === currentSong.slug)
+    const nextSong = state.queue[idx + 1]
+    if (!nextSong) return
+    const t = setTimeout(() => {
+      // Respect Data Saver if available
+      if ('connection' in navigator) {
+        const conn = (navigator as any).connection
+        if (conn?.saveData) return
+      }
+      fetch(`/api/stream/${nextSong.slug}`, {
+        method: 'GET',
+        // @ts-ignore — priority hint, Chrome 102+
+        priority: 'low',
+      }).catch(() => {})
+    }, 5000)
+    return () => clearTimeout(t)
+  }, [currentSong?.slug]) // eslint-disable-line
 
   // Wire timeupdate via imperative listener so we can include setPositionState
   useEffect(() => {

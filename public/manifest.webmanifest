@@ -1,13 +1,13 @@
 {
-  "name": "PurposeJoy Listen",
-  "short_name": "PurposeJoy",
+  "name": "PurposeJoyListen",
+  "short_name": "PurposeJoyListen",
   "description": "Original songs by R. Michael Eatmon",
   "start_url": "/listen",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#1A0C00",
-  "background_color": "#0F0703",
+  "theme_color": "#0C0618",
+  "background_color": "#0C0618",
   "lang": "en-US",
   "categories": ["music", "entertainment"],
   "icons": [

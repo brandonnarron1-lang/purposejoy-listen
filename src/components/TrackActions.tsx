@@ -16,7 +16,7 @@ interface Props {
 
 export default function TrackActions({ song }: Props) {
   const [shareState, setShareState] = useState<'idle' | 'copied' | 'shared'>('idle');
-  const [offlineStatus, setOfflineStatus] = useState<string>('');
+  const [cacheState, setCacheState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const { cachedSlugs, refreshCacheState } = usePlayer();
   const isCached = cachedSlugs.has(song.slug);
 
@@ -58,21 +58,35 @@ export default function TrackActions({ song }: Props) {
       }
       return;
     }
-    setOfflineStatus('Saving...');
+    setCacheState('saving');
     try {
       const resp = await fetch(`/api/stream/${song.slug}`);
       if (resp.ok) {
         const cache = await caches.open('audio-cache');
         await cache.put(`/api/stream/${song.slug}`, resp.clone());
         refreshCacheState();
-        setOfflineStatus('Saved offline ✓');
+        // Also precache cover art so MediaSession artwork shows on lock screen offline
+        try {
+          const coverKey = (song as any).cover_r2_key;
+          if (coverKey) {
+            const coverResp = await fetch(`/api/cover/${coverKey}`);
+            if (coverResp.ok) {
+              const coverCache = await caches.open('cover-art-cache');
+              await coverCache.put(`/api/cover/${coverKey}`, coverResp.clone());
+            }
+          }
+        } catch {
+          // non-blocking — cover cache failure is ok
+        }
+        setCacheState('saved');
       } else {
-        setOfflineStatus('Save failed');
+        setCacheState('error');
+        setTimeout(() => setCacheState('idle'), 3000);
       }
     } catch {
-      setOfflineStatus('Save failed');
+      setCacheState('error');
+      setTimeout(() => setCacheState('idle'), 3000);
     }
-    setTimeout(() => setOfflineStatus(''), 2500);
   };
 
   const handleDownload = () => {
@@ -111,9 +125,14 @@ export default function TrackActions({ song }: Props) {
         onClick={handleSaveOffline}
         aria-label={isCached ? 'Remove from offline' : 'Save for offline'}
       >
-        <span className="track-action-icon" aria-hidden>{isCached ? '✓' : '⤓'}</span>
+        <span className="track-action-icon" aria-hidden>
+          {cacheState === 'saving' ? '…' : isCached ? '✓' : '⤓'}
+        </span>
         <span className="track-action-label">
-          {offlineStatus || (isCached ? 'Saved' : 'Offline')}
+          {cacheState === 'saving' ? 'Saving…'
+            : cacheState === 'error' ? 'Try again'
+            : isCached ? 'Saved'
+            : 'Offline'}
         </span>
       </button>
 

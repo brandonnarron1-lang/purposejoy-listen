@@ -1104,8 +1104,8 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 
-/* ─── PWA Install Prompt ─── */
-.install-prompt {
+/* ─── PWA Install Prompt (legacy — replaced by install-banner) ─── */
+.install-prompt-UNUSED {
   position: fixed;
   z-index: 80;
   background: linear-gradient(180deg,
@@ -1384,7 +1384,236 @@ input[type='range']::-webkit-slider-thumb {
   cursor: pointer;
   transition: filter 150ms ease;
 }
-.install-guide-done:active { filter: brightness(0.9); }
+.install-guide-done-UNUSED:active { filter: brightness(0.9); }
+
+/* ─── Install Banner + Guide ─── */
+.install-banner {
+  position: fixed;
+  bottom: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 1.5rem);
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.625rem 0.875rem;
+  background: rgba(12, 6, 24, 0.92);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(138, 43, 226, 0.4);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Open Sans', sans-serif;
+  color: #FFF0D6;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,215,80,0.06);
+  z-index: 50;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.install-banner:hover,
+.install-banner:active {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 12px 32px rgba(138,43,226,0.25);
+}
+.install-banner-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.install-banner-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.install-banner-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+}
+.install-banner-sub {
+  font-size: 0.7rem;
+  color: rgba(255,215,80,0.85);
+  letter-spacing: 0.05em;
+  margin-top: 0.125rem;
+}
+.install-banner-chevron {
+  color: #FFD750;
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-right: 0.25rem;
+}
+.install-banner-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,240,214,0.6);
+  font-size: 1rem;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.install-banner-close:hover {
+  background: rgba(255,255,255,0.12);
+  color: #FFF0D6;
+}
+.install-guide-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(12,6,24,0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: install-fade-in 200ms ease;
+}
+@keyframes install-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@media (min-width: 768px) {
+  .install-guide-backdrop { align-items: center; }
+}
+.install-guide-sheet {
+  position: relative;
+  background: linear-gradient(180deg, #1a0d2e 0%, #0c0618 100%);
+  border: 1px solid rgba(138,43,226,0.4);
+  border-radius: 24px 24px 0 0;
+  padding: 2rem 1.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
+  color: #FFF0D6;
+  font-family: 'Open Sans', sans-serif;
+  animation: install-slide-up 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes install-slide-up {
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@media (min-width: 768px) {
+  .install-guide-sheet { border-radius: 24px; }
+}
+.install-guide-close-x {
+  position: absolute;
+  top: 0.875rem;
+  right: 0.875rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #FFF0D6;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.install-guide-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  text-align: center;
+  margin: 0 0 0.5rem;
+  color: #FFF0D6;
+}
+.install-guide-sub {
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(255,215,80,0.85);
+  letter-spacing: 0.05em;
+  margin: 0 0 1.75rem;
+}
+.install-step {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.install-step:last-of-type { border-bottom: none; }
+.install-step-num {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD750 0%, #D4AF37 100%);
+  color: #0C0618;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px rgba(255,215,80,0.3);
+}
+.install-step-content {
+  flex: 1;
+  min-width: 0;
+}
+.install-step-text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #FFF0D6;
+  line-height: 1.4;
+}
+.install-step-text b {
+  color: #FFD750;
+  font-weight: 600;
+}
+.install-step-icon-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 0.5rem;
+}
+.install-step-share-icon,
+.install-step-plus-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.install-step-helper {
+  font-size: 0.75rem;
+  color: rgba(255,240,214,0.6);
+  letter-spacing: 0.02em;
+}
+.install-guide-cta {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #FFD750 0%, #D4AF37 100%);
+  color: #0C0618;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(212,175,55,0.25);
+  transition: transform 150ms ease;
+}
+.install-guide-cta:hover,
+.install-guide-cta:active { transform: translateY(-1px); }
+@media (prefers-reduced-motion: reduce) {
+  .install-banner,
+  .install-guide-backdrop,
+  .install-guide-sheet,
+  .install-guide-cta { animation: none !important; transition: none !important; }
+}
 
 /* ─── Track Actions ─── */
 .track-actions {

@@ -398,34 +398,47 @@
         <text x="135" y="180" text-anchor="middle" fill="#FFF0D6" font-family="-apple-system, sans-serif" font-size="14" font-weight="700">PurposeJoyListen</text>
         <text x="135" y="200" text-anchor="middle" fill="rgba(255,240,214,0.55)" font-family="-apple-system, sans-serif" font-size="10" font-style="italic">Songs by Mike Eatmon</text>
 
-        <!-- Safari bottom toolbar -->
+        <!-- Safari bottom toolbar (modern compact style) -->
         <rect x="0" y="430" width="270" height="50" fill="rgba(255,255,255,0.04)"/>
         <line x1="0" y1="430" x2="270" y2="430" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
 
-        <!-- Toolbar icons (subtle, just for context) -->
-        <path d="M30 455 L40 448 L40 462 Z" fill="rgba(255,240,214,0.4)"/>
-        <path d="M55 462 L65 448 L75 462 Z" fill="none" stroke="rgba(255,240,214,0.4)" stroke-width="1.2"/>
+        <!-- Back button -->
+        <path d="M18 455 L26 449 L26 461 Z" fill="rgba(255,240,214,0.4)"/>
 
-        <!-- Share button (highlighted target) -->
+        <!-- Address bar pill -->
+        <rect x="38" y="445" width="170" height="20" rx="10" fill="rgba(255,255,255,0.06)"/>
+        <text x="123" y="459" text-anchor="middle" fill="rgba(255,240,214,0.35)" font-family="-apple-system, sans-serif" font-size="8">listen.purposejoy.org</text>
+
+        <!-- ··· button (tap this first) -->
         <g id="shareTarget">
-          <rect x="115" y="442" width="40" height="22" rx="5" fill="rgba(255,215,80,0.0)" stroke="rgba(255,215,80,0.0)" stroke-width="1.5">
+          <rect x="218" y="442" width="36" height="22" rx="5" fill="rgba(255,215,80,0.0)" stroke="rgba(255,215,80,0.0)" stroke-width="1.5">
             <animate attributeName="stroke" values="rgba(255,215,80,0.0); rgba(255,215,80,0.9); rgba(255,215,80,0.9); rgba(255,215,80,0.0)" keyTimes="0; 0.15; 0.45; 0.5" dur="6s" repeatCount="indefinite"/>
             <animate attributeName="fill" values="rgba(255,215,80,0.0); rgba(255,215,80,0.18); rgba(255,215,80,0.18); rgba(255,215,80,0.0)" keyTimes="0; 0.15; 0.45; 0.5" dur="6s" repeatCount="indefinite"/>
           </rect>
-          <!-- Share icon glyph -->
-          <rect x="129" y="450" width="12" height="11" rx="1.5" fill="none" stroke="rgba(255,240,214,0.85)" stroke-width="1.2"/>
-          <path d="M135 453 V445 M132 448 L135 445 L138 448" fill="none" stroke="rgba(255,240,214,0.85)" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="228" cy="453" r="1.8" fill="rgba(255,240,214,0.85)"/>
+          <circle cx="236" cy="453" r="1.8" fill="rgba(255,240,214,0.85)"/>
+          <circle cx="244" cy="453" r="1.8" fill="rgba(255,240,214,0.85)"/>
         </g>
 
-        <!-- Bookmarks + tabs icons -->
-        <path d="M195 450 L195 462 M190 456 L200 456" stroke="rgba(255,240,214,0.4)" stroke-width="1.2" stroke-linecap="round"/>
-        <rect x="220" y="450" width="14" height="12" rx="2" fill="none" stroke="rgba(255,240,214,0.4)" stroke-width="1.2"/>
-
-        <!-- Animated tap dot pointing at share button -->
-        <circle cx="135" cy="453" r="0" fill="rgba(255,215,80,0)">
+        <!-- Tap dot on ··· button -->
+        <circle cx="236" cy="453" r="0" fill="rgba(255,215,80,0)">
           <animate attributeName="r" values="0; 18; 0; 0" keyTimes="0; 0.18; 0.32; 1" dur="6s" repeatCount="indefinite"/>
           <animate attributeName="fill" values="rgba(255,215,80,0); rgba(255,215,80,0.5); rgba(255,215,80,0); rgba(255,215,80,0)" keyTimes="0; 0.18; 0.32; 1" dur="6s" repeatCount="indefinite"/>
         </circle>
+
+        <!-- Mini menu after ··· tap: Share option -->
+        <g opacity="0">
+          <animate attributeName="opacity" values="0; 0; 1; 1; 0; 0" keyTimes="0; 0.28; 0.33; 0.47; 0.5; 1" dur="6s" repeatCount="indefinite"/>
+          <rect x="115" y="390" width="142" height="36" rx="8" fill="#1e1230" stroke="rgba(255,255,255,0.12)" stroke-width="0.8"/>
+          <rect x="118" y="392" width="136" height="30" rx="6" fill="rgba(255,215,80,0.15)"/>
+          <rect x="128" y="400" width="10" height="9" rx="1.5" fill="none" stroke="#FFD750" stroke-width="1"/>
+          <path d="M133 402V397M131 399L133 397L135 399" fill="none" stroke="#FFD750" stroke-width="1" stroke-linecap="round"/>
+          <text x="144" y="411" fill="rgba(255,240,214,0.95)" font-family="-apple-system, sans-serif" font-size="11" font-weight="500">Share</text>
+          <circle cx="195" cy="407" r="0" fill="rgba(255,215,80,0)">
+            <animate attributeName="r" values="0;0;0;14;0;0" keyTimes="0;0.32;0.38;0.44;0.48;1" dur="6s" repeatCount="indefinite"/>
+            <animate attributeName="fill" values="rgba(255,215,80,0);rgba(255,215,80,0);rgba(255,215,80,0);rgba(255,215,80,0.4);rgba(255,215,80,0);rgba(255,215,80,0)" keyTimes="0;0.32;0.38;0.44;0.48;1" dur="6s" repeatCount="indefinite"/>
+          </circle>
+        </g>
 
         <!-- Share sheet (slides up after share tap) -->
         <g opacity="0">
@@ -474,12 +487,7 @@
       <div class="ios-step">
         <div class="ios-step-num">1</div>
         <div class="ios-step-text">
-          Tap
-          <svg class="ios-step-icon" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <rect x="6" y="10" width="12" height="11" rx="2" stroke="#FFD750" stroke-width="1.6"/>
-            <path d="M12 14V3M12 3L8 7M12 3L16 7" stroke="#FFD750" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <b>Share</b> — bottom-center of Safari toolbar
+          Tap <b>···</b> (three dots, bottom-right of Safari) → tap <b>Share</b>
         </div>
       </div>
       <div class="ios-step">
@@ -492,7 +500,7 @@
 
     <!-- GIANT pulsing pointer to Safari Share button -->
     <div class="share-pointer">
-      <div class="share-pointer-headline">Tap the Share button in YOUR Safari ↑</div>
+      <div class="share-pointer-headline">Tap ··· then Share in YOUR Safari</div>
       <div class="share-pointer-icon-wrap">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden>
           <rect x="6" y="10" width="12" height="11" rx="2" stroke="#FFD750" stroke-width="1.6"/>
@@ -503,7 +511,7 @@
         <svg viewBox="0 0 24 24" fill="none" aria-hidden>
           <path d="M12 4V20M12 20L6 14M12 20L18 14" stroke="#FFD750" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <div class="share-pointer-helper">Look in your Safari toolbar — top of screen, or bottom if you've moved it there.<br>This page is just instructions. The button to tap is in your browser's chrome.</div>
+        <div class="share-pointer-helper">The ··· (three dots) is at the right of your address bar at the bottom. Tap it — Share is the first option.<br>This page is just instructions.</div>
       </div>
     </div>
   </section>

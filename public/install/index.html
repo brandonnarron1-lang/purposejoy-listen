@@ -263,10 +263,26 @@
     height: 80px;
     border-radius: 20px;
     background: rgba(255, 215, 80, 0.1);
-    border: 2px solid #FFD750;
-    margin-bottom: 0.5rem;
-    box-shadow: 0 0 0 0 rgba(255, 215, 80, 0.7);
-    animation: share-pulse 1.8s ease-in-out infinite;
+    border: 2px dashed rgba(255, 215, 80, 0.6);
+    margin-bottom: 1.5rem;
+    box-shadow: none;
+    animation: none;
+    opacity: 0.7;
+    pointer-events: none;
+    position: relative;
+  }
+  .share-pointer-icon-wrap::after {
+    content: "illustration";
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    white-space: nowrap;
+    color: rgba(255, 240, 214, 0.65);
   }
   .share-pointer-icon-wrap svg {
     width: 48px;
@@ -287,9 +303,10 @@
     flex-direction: column;
     align-items: center;
     gap: 0.25rem;
-    margin-top: 0.5rem;
+    margin-top: 1.25rem;
     color: rgba(255, 215, 80, 0.95);
-    animation: arrow-down-bounce 1.4s ease-in-out infinite;
+    animation: arrow-down-bounce 4s ease-in-out infinite;
+    opacity: 0.6;
   }
   .share-pointer-arrow svg {
     width: 38px;
@@ -475,7 +492,7 @@
 
     <!-- GIANT pulsing pointer to Safari Share button -->
     <div class="share-pointer">
-      <div class="share-pointer-headline">Tap THIS button now</div>
+      <div class="share-pointer-headline">Tap the Share button in YOUR Safari ↑</div>
       <div class="share-pointer-icon-wrap">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden>
           <rect x="6" y="10" width="12" height="11" rx="2" stroke="#FFD750" stroke-width="1.6"/>
@@ -486,7 +503,7 @@
         <svg viewBox="0 0 24 24" fill="none" aria-hidden>
           <path d="M12 4V20M12 20L6 14M12 20L18 14" stroke="#FFD750" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <div class="share-pointer-helper">It's at the bottom of your Safari window</div>
+        <div class="share-pointer-helper">Look in your Safari toolbar — top of screen, or bottom if you've moved it there.<br>This page is just instructions. The button to tap is in your browser's chrome.</div>
       </div>
     </div>
   </section>

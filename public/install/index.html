@@ -208,6 +208,104 @@
     50% { transform: translateY(8px); opacity: 1; }
   }
 
+  /* Animated demo (synthetic SVG showing the iOS install flow) */
+  .ios-demo {
+    width: 100%;
+    max-width: 280px;
+    margin: 0.5rem auto 1.75rem;
+    aspect-ratio: 9 / 16;
+    border-radius: 28px;
+    background: #1a0d2e;
+    border: 1px solid rgba(255, 215, 80, 0.18);
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    position: relative;
+  }
+  .ios-demo svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .ios-demo-caption {
+    text-align: center;
+    font-size: 0.8125rem;
+    color: rgba(255, 240, 214, 0.55);
+    margin: -1rem auto 1.5rem;
+    font-style: italic;
+  }
+
+  /* GIANT pointer to Safari Share button — replaces the small arrow */
+  .share-pointer {
+    width: 100%;
+    max-width: 360px;
+    margin-top: 2.25rem;
+    padding: 1.25rem 1rem 1rem;
+    border-radius: 18px;
+    background: linear-gradient(135deg,
+      rgba(255, 215, 80, 0.12) 0%,
+      rgba(255, 215, 80, 0.04) 100%);
+    border: 1.5px solid rgba(255, 215, 80, 0.35);
+    text-align: center;
+    position: relative;
+  }
+  .share-pointer-headline {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: #FFD750;
+    margin: 0 0 0.875rem;
+    letter-spacing: 0.01em;
+  }
+  .share-pointer-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: rgba(255, 215, 80, 0.1);
+    border: 2px solid #FFD750;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 0 0 0 rgba(255, 215, 80, 0.7);
+    animation: share-pulse 1.8s ease-in-out infinite;
+  }
+  .share-pointer-icon-wrap svg {
+    width: 48px;
+    height: 48px;
+  }
+  @keyframes share-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(255, 215, 80, 0.55);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 0 18px rgba(255, 215, 80, 0);
+      transform: scale(1.04);
+    }
+  }
+  .share-pointer-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    color: rgba(255, 215, 80, 0.95);
+    animation: arrow-down-bounce 1.4s ease-in-out infinite;
+  }
+  .share-pointer-arrow svg {
+    width: 38px;
+    height: 38px;
+  }
+  .share-pointer-helper {
+    font-size: 0.8125rem;
+    color: rgba(255, 240, 214, 0.65);
+    margin-top: 0.25rem;
+    font-style: italic;
+  }
+  @keyframes arrow-down-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+  }
+
   .info-block {
     margin-top: 1.5rem;
     padding: 1rem 1.25rem;
@@ -238,7 +336,11 @@
   .platform-section.active { display: flex; flex-direction: column; align-items: center; width: 100%; }
 
   @media (prefers-reduced-motion: reduce) {
-    .icon-wrap, .arrow-down-hint { animation: none; }
+    .icon-wrap,
+    .arrow-down-hint,
+    .share-pointer-icon-wrap,
+    .share-pointer-arrow,
+    .ios-demo svg * { animation: none !important; }
   }
 </style>
 </head>
@@ -258,16 +360,109 @@
       Two taps to add to your home screen
     </p>
 
+    <!-- Synthetic animated demo of the iOS install flow -->
+    <div class="ios-demo" aria-label="Animated demonstration of the install steps">
+      <svg viewBox="0 0 270 480" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <!-- iPhone screen background (Safari) -->
+        <rect width="270" height="480" fill="#0C0618"/>
+
+        <!-- Safari address bar -->
+        <rect x="14" y="14" width="242" height="32" rx="10" fill="rgba(255,255,255,0.08)"/>
+        <text x="135" y="35" text-anchor="middle" fill="rgba(255,240,214,0.55)" font-family="-apple-system, sans-serif" font-size="11">listen.purposejoy.org</text>
+
+        <!-- Page mock: app icon + name -->
+        <rect x="95" y="80" width="80" height="80" rx="18" fill="url(#demoGrad)"/>
+        <defs>
+          <linearGradient id="demoGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7B3FE4"/>
+            <stop offset="100%" stop-color="#3B1A66"/>
+          </linearGradient>
+        </defs>
+        <text x="135" y="180" text-anchor="middle" fill="#FFF0D6" font-family="-apple-system, sans-serif" font-size="14" font-weight="700">PurposeJoyListen</text>
+        <text x="135" y="200" text-anchor="middle" fill="rgba(255,240,214,0.55)" font-family="-apple-system, sans-serif" font-size="10" font-style="italic">Songs by Mike Eatmon</text>
+
+        <!-- Safari bottom toolbar -->
+        <rect x="0" y="430" width="270" height="50" fill="rgba(255,255,255,0.04)"/>
+        <line x1="0" y1="430" x2="270" y2="430" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+
+        <!-- Toolbar icons (subtle, just for context) -->
+        <path d="M30 455 L40 448 L40 462 Z" fill="rgba(255,240,214,0.4)"/>
+        <path d="M55 462 L65 448 L75 462 Z" fill="none" stroke="rgba(255,240,214,0.4)" stroke-width="1.2"/>
+
+        <!-- Share button (highlighted target) -->
+        <g id="shareTarget">
+          <rect x="115" y="442" width="40" height="22" rx="5" fill="rgba(255,215,80,0.0)" stroke="rgba(255,215,80,0.0)" stroke-width="1.5">
+            <animate attributeName="stroke" values="rgba(255,215,80,0.0); rgba(255,215,80,0.9); rgba(255,215,80,0.9); rgba(255,215,80,0.0)" keyTimes="0; 0.15; 0.45; 0.5" dur="6s" repeatCount="indefinite"/>
+            <animate attributeName="fill" values="rgba(255,215,80,0.0); rgba(255,215,80,0.18); rgba(255,215,80,0.18); rgba(255,215,80,0.0)" keyTimes="0; 0.15; 0.45; 0.5" dur="6s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Share icon glyph -->
+          <rect x="129" y="450" width="12" height="11" rx="1.5" fill="none" stroke="rgba(255,240,214,0.85)" stroke-width="1.2"/>
+          <path d="M135 453 V445 M132 448 L135 445 L138 448" fill="none" stroke="rgba(255,240,214,0.85)" stroke-width="1.2" stroke-linecap="round"/>
+        </g>
+
+        <!-- Bookmarks + tabs icons -->
+        <path d="M195 450 L195 462 M190 456 L200 456" stroke="rgba(255,240,214,0.4)" stroke-width="1.2" stroke-linecap="round"/>
+        <rect x="220" y="450" width="14" height="12" rx="2" fill="none" stroke="rgba(255,240,214,0.4)" stroke-width="1.2"/>
+
+        <!-- Animated tap dot pointing at share button -->
+        <circle cx="135" cy="453" r="0" fill="rgba(255,215,80,0)">
+          <animate attributeName="r" values="0; 18; 0; 0" keyTimes="0; 0.18; 0.32; 1" dur="6s" repeatCount="indefinite"/>
+          <animate attributeName="fill" values="rgba(255,215,80,0); rgba(255,215,80,0.5); rgba(255,215,80,0); rgba(255,215,80,0)" keyTimes="0; 0.18; 0.32; 1" dur="6s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- Share sheet (slides up after share tap) -->
+        <g opacity="0">
+          <animate attributeName="opacity" values="0; 0; 1; 1; 0" keyTimes="0; 0.5; 0.55; 0.92; 0.95" dur="6s" repeatCount="indefinite"/>
+          <rect x="10" y="180" width="250" height="270" rx="20" fill="#1a0d2e" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+          <rect x="120" y="190" width="30" height="3" rx="1.5" fill="rgba(255,240,214,0.2)"/>
+
+          <!-- App row in share sheet -->
+          <rect x="22" y="208" width="226" height="44" rx="10" fill="rgba(255,255,255,0.05)"/>
+          <rect x="32" y="216" width="28" height="28" rx="6" fill="url(#demoGrad)"/>
+          <text x="68" y="234" fill="#FFF0D6" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">PurposeJoyListen</text>
+          <text x="68" y="246" fill="rgba(255,240,214,0.5)" font-family="-apple-system, sans-serif" font-size="9">listen.purposejoy.org</text>
+
+          <!-- AirDrop / Messages row (just for visual context) -->
+          <rect x="22" y="262" width="50" height="56" rx="10" fill="rgba(255,255,255,0.04)"/>
+          <rect x="80" y="262" width="50" height="56" rx="10" fill="rgba(255,255,255,0.04)"/>
+          <rect x="138" y="262" width="50" height="56" rx="10" fill="rgba(255,255,255,0.04)"/>
+          <rect x="196" y="262" width="50" height="56" rx="10" fill="rgba(255,255,255,0.04)"/>
+
+          <!-- Add to Home Screen row (highlighted target) -->
+          <g>
+            <rect x="22" y="332" width="226" height="44" rx="10" fill="rgba(255,215,80,0)" stroke="rgba(255,215,80,0)" stroke-width="1.5">
+              <animate attributeName="stroke" values="rgba(255,215,80,0); rgba(255,215,80,0); rgba(255,215,80,0.9); rgba(255,215,80,0.9); rgba(255,215,80,0)" keyTimes="0; 0.62; 0.7; 0.92; 0.95" dur="6s" repeatCount="indefinite"/>
+              <animate attributeName="fill" values="rgba(255,215,80,0); rgba(255,215,80,0); rgba(255,215,80,0.18); rgba(255,215,80,0.18); rgba(255,215,80,0)" keyTimes="0; 0.62; 0.7; 0.92; 0.95" dur="6s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="34" y="344" width="20" height="20" rx="4" fill="none" stroke="#FFD750" stroke-width="1.5"/>
+            <path d="M44 350 V362 M38 356 H50" stroke="#FFD750" stroke-width="1.5" stroke-linecap="round"/>
+            <text x="62" y="358" fill="#FFF0D6" font-family="-apple-system, sans-serif" font-size="11" font-weight="500">Add to Home Screen</text>
+          </g>
+
+          <!-- Tap dot for Add to Home Screen -->
+          <circle cx="135" cy="354" r="0" fill="rgba(255,215,80,0)">
+            <animate attributeName="r" values="0; 0; 0; 22; 0; 0" keyTimes="0; 0.65; 0.78; 0.85; 0.92; 1" dur="6s" repeatCount="indefinite"/>
+            <animate attributeName="fill" values="rgba(255,215,80,0); rgba(255,215,80,0); rgba(255,215,80,0); rgba(255,215,80,0.5); rgba(255,215,80,0); rgba(255,215,80,0)" keyTimes="0; 0.65; 0.78; 0.85; 0.92; 1" dur="6s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- Cancel button at bottom -->
+          <rect x="22" y="400" width="226" height="38" rx="10" fill="rgba(255,255,255,0.05)"/>
+          <text x="135" y="423" text-anchor="middle" fill="rgba(255,240,214,0.7)" font-family="-apple-system, sans-serif" font-size="11">Cancel</text>
+        </g>
+      </svg>
+    </div>
+    <p class="ios-demo-caption">Watch — then do the same on your phone</p>
+
     <div class="ios-guide">
       <div class="ios-step">
         <div class="ios-step-num">1</div>
         <div class="ios-step-text">
-          Tap the
+          Tap
           <svg class="ios-step-icon" viewBox="0 0 24 24" fill="none" aria-hidden>
             <rect x="6" y="10" width="12" height="11" rx="2" stroke="#FFD750" stroke-width="1.6"/>
             <path d="M12 14V3M12 3L8 7M12 3L16 7" stroke="#FFD750" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <b>Share</b> button at the bottom of Safari
+          <b>Share</b> — bottom-center of Safari toolbar
         </div>
       </div>
       <div class="ios-step">
@@ -278,11 +473,21 @@
       </div>
     </div>
 
-    <div class="arrow-down-hint">
-      <span>Share button is at the bottom</span>
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path d="M12 4V20M12 20L6 14M12 20L18 14" stroke="#FFD750" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+    <!-- GIANT pulsing pointer to Safari Share button -->
+    <div class="share-pointer">
+      <div class="share-pointer-headline">Tap THIS button now</div>
+      <div class="share-pointer-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+          <rect x="6" y="10" width="12" height="11" rx="2" stroke="#FFD750" stroke-width="1.6"/>
+          <path d="M12 14V3M12 3L8 7M12 3L16 7" stroke="#FFD750" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="share-pointer-arrow">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M12 4V20M12 20L6 14M12 20L18 14" stroke="#FFD750" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="share-pointer-helper">It's at the bottom of your Safari window</div>
+      </div>
     </div>
   </section>
 

@@ -182,3 +182,27 @@
     border-right-color: var(--border);
   }
 }
+
+/* ── Email capture footer ───────────────────────────────────── */
+.listen-footer {
+  text-align: center;
+  padding: 2.5rem 1rem 4rem;
+}
+
+.subscribe-footer-link {
+  background: none;
+  border: none;
+  color: rgba(255, 240, 214, 0.45);
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0.5rem 0;
+  transition: color 0.2s;
+}
+
+.subscribe-footer-link:hover,
+.subscribe-footer-link:focus-visible {
+  color: rgba(255, 240, 214, 0.75);
+  outline: none;
+}

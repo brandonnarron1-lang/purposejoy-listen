@@ -187,6 +187,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const handleEnded = useCallback(() => {
+    // Dispatch custom event for listen page to hook into (e.g. subscribe modal trigger)
+    window.dispatchEvent(new CustomEvent('purposejoy:track-ended'))
     setState(s => {
       if (s.queue.length === 0) return s
       if (s.currentIndex >= s.queue.length - 1) {

@@ -33,16 +33,39 @@ export function SheetProvider({ children }: { children: ReactNode }) {
   const [morphSource, setMorphSource] = useState<MorphRect | null>(null);
 
   const open = useCallback((sourceRect?: MorphRect) => {
-    if (sourceRect) setMorphSource(sourceRect);
-    setIsOpen(true);
+    const doOpen = () => {
+      if (sourceRect) setMorphSource(sourceRect);
+      setIsOpen(true);
+    };
+    if ('startViewTransition' in document) {
+      (document as Document & { startViewTransition: (cb: () => void) => void })
+        .startViewTransition(doOpen);
+    } else {
+      doOpen();
+    }
   }, []);
 
   const close = useCallback(() => {
-    setIsOpen(false);
-    setMorphSource(null);
+    const doClose = () => {
+      setIsOpen(false);
+      setMorphSource(null);
+    };
+    if ('startViewTransition' in document) {
+      (document as Document & { startViewTransition: (cb: () => void) => void })
+        .startViewTransition(doClose);
+    } else {
+      doClose();
+    }
   }, []);
 
-  const toggle = useCallback(() => setIsOpen((v) => !v), []);
+  const toggle = useCallback(() => {
+    if ('startViewTransition' in document) {
+      (document as Document & { startViewTransition: (cb: () => void) => void })
+        .startViewTransition(() => setIsOpen((v) => !v));
+    } else {
+      setIsOpen((v) => !v);
+    }
+  }, []);
   const clearMorph = useCallback(() => setMorphSource(null), []);
 
   return (

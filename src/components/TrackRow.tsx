@@ -35,11 +35,11 @@ export function TrackRow({ song, queue, index }: TrackRowProps) {
     <div
       ref={rowRef}
       onClick={() => play(song, queue)}
-      className="flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-all"
+      className="flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-all scroll-fade-in"
       style={{
-        background: isActive ? 'rgba(212,175,55,0.06)' : 'transparent',
-        borderLeft: isActive ? '4px solid #D4AF37' : '4px solid transparent',
-        boxShadow: isActive ? 'inset 0 0 24px rgba(212,175,55,0.04)' : 'none',
+        background: isActive ? 'var(--pj-surface)' : 'transparent',
+        borderLeft: isActive ? '4px solid var(--pj-gold)' : '4px solid transparent',
+        boxShadow: isActive ? 'inset 0 0 24px color-mix(in oklch, var(--pj-gold) 4%, transparent)' : 'none',
       }}
     >
       {/* Listen-status dot */}
@@ -48,13 +48,13 @@ export function TrackRow({ song, queue, index }: TrackRowProps) {
           {listenStatus === 'listened' && (
             <span
               title="Listened"
-              style={{ width: 7, height: 7, borderRadius: '50%', background: '#D4AF37', display: 'block' }}
+              style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--pj-gold)', display: 'block' }}
             />
           )}
           {listenStatus === 'in-progress' && (
             <span
               title="In progress"
-              style={{ width: 7, height: 7, borderRadius: '50%', border: '1.5px solid #D4AF37', display: 'block' }}
+              style={{ width: 7, height: 7, borderRadius: '50%', border: '1.5px solid var(--pj-gold)', display: 'block' }}
             />
           )}
         </div>
@@ -63,7 +63,7 @@ export function TrackRow({ song, queue, index }: TrackRowProps) {
       {/* Index / now-playing indicator */}
       <div style={{ width: 24, textAlign: 'center', flexShrink: 0 }}>
         {isActive && playing ? (
-          <span style={{ fontSize: 12, color: '#D4AF37', animation: 'pulse 1.5s ease-in-out infinite' }}>▶</span>
+          <span style={{ fontSize: 12, color: 'var(--pj-gold)', animation: 'pulse 1.5s ease-in-out infinite' }}>▶</span>
         ) : (
           <span style={{ fontSize: 12, fontFamily: 'var(--font-head)', color: 'var(--pj-muted)', fontWeight: 400 }}>{index + 1}</span>
         )}
@@ -101,7 +101,7 @@ export function TrackRow({ song, queue, index }: TrackRowProps) {
         <p
           className="pj-track-title"
           style={{
-            color: isActive ? '#D4AF37' : 'var(--pj-text)',
+            color: isActive ? 'var(--pj-gold)' : 'var(--pj-text)',
             fontSize: 14,
             margin: 0,
             whiteSpace: 'nowrap',

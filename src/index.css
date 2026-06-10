@@ -1,43 +1,24 @@
 @import "tailwindcss";
+@import "./styles/brand-tokens.css";
 
 /* ============================================================
-   PURPOSEJOY BRAND TOKENS — v1.2 BRAND-CORRECTED
-   Source: purposejoy_deploy_ready/styles.css + brand inventory
-   Gold updated from provisional #E8B14A → brand canonical #D4AF37
-   Typography: Montserrat (UI) + Open Sans (body) + Cormorant Garamond (accent)
+   PURPOSEJOY GLOBAL STYLES — v2.0
+   Token source: ./styles/brand-tokens.css
+   Legacy token aliases kept for backwards compat with existing
+   components until full sweep is complete.
    ============================================================ */
+/* Legacy token aliases — point at canonical vars from brand-tokens.css */
 :root {
-  /* Core palette — Sunset v2 */
-  --pj-primary: #1A0C00;        /* Deep burnt amber dark */
-  --pj-secondary: #E8963A;      /* Warm sunset orange-gold */
-  --pj-gold-light: #F4C06A;     /* Warm gold light variant */
-  --pj-gold-glow: rgba(232,150,58,0.30); /* Warm glow overlay */
-  --pj-gold-border: rgba(232,150,58,0.22); /* Subtle warm border */
+  /* Palette aliases */
+  --pj-primary:      var(--pj-bg);
+  --pj-secondary:    var(--pj-gold);
+  --pj-gold-light:   var(--pj-gold-bright);
+  --pj-gold-border:  var(--pj-border);
+  --pj-warm-sand:    var(--pj-sand);
+  --pj-player-text:  var(--pj-text);
 
-  /* Backgrounds */
-  --pj-bg: #1A0C00;             /* Deep warm dark — replaces off-white */
-  --pj-surface: rgba(255,180,80,0.07); /* Warm translucent surface */
-  --pj-deep-dark: #0A0500;      /* Splash/modal deep dark */
-
-  /* Text */
-  --pj-text: #FFF0D6;           /* Warm cream primary text */
-  --pj-muted: rgba(255,220,160,0.55); /* Muted warm text */
-  --pj-warm-sand: #F4C06A;      /* Warm sand accent */
-
-  /* UI */
-  --pj-border: rgba(232,150,58,0.15); /* Warm divider */
-  --pj-player-bg: #2D1600;      /* Player bar — warm dark amber */
-  --pj-player-text: #FFF0D6;    /* Player bar text */
-  --player-height: 72px;
-
-  /* Typography */
-  --font-head: 'Montserrat', sans-serif;
-  --font-body: 'Open Sans', sans-serif;
-  --font-accent: 'Cormorant Garamond', serif;
-
-  /* Motion */
-  --ease: 0.3s ease;
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Motion alias */
+  --ease: var(--duration-base) ease;
 }
 
 /* ============================================================
@@ -45,7 +26,7 @@
    ============================================================ */
 html, body, #root {
   height: 100%;
-  background-color: #1A0C00;
+  background-color: var(--pj-bg);
   color: var(--pj-text);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -98,11 +79,11 @@ h1, h2, h3, h4, h5, h6 {
 input[type='range'] {
   -webkit-appearance: none;
   height: 4px;
-  background: rgba(232,150,58,0.18);
+  background: var(--pj-border);
   border-radius: 2px;
   outline: none;
   cursor: pointer;
-  accent-color: var(--pj-secondary);
+  accent-color: var(--pj-gold);
 }
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;

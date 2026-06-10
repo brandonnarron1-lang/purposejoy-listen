@@ -1,0 +1,185 @@
+/* ============================================================
+   PURPOSEJOY BRAND TOKENS — Canonical v2.0
+   Source of truth: brand_guide.txt (lwpaj_brand_system.zip)
+   DO NOT add hex literals to components — reference these vars.
+   ============================================================ */
+
+:root {
+  /* ── Core palette ─────────────────────────────────────────── */
+  --pj-gold:          #D4AF37;   /* Golden Sun — primary accent   */
+  --pj-gold-bright:   #FFD750;   /* Bright Sun — highlights, CTAs */
+  --pj-gold-glow:     #FFC832;   /* Soft Glow — at 20-50% opacity */
+  --pj-deep-dark:     #0A0500;   /* Deep Ocean — deepest shadows  */
+  --pj-bg:            #140A05;   /* Warm Shadow — base background  */
+  --pj-text:          #FFFFFF;   /* Pure Light — primary text     */
+  --pj-sand:          #F0DCA0;   /* Warm Sand — secondary text    */
+
+  /* ── Derived / contextual ────────────────────────────────── */
+  --pj-surface:       color-mix(in oklch, var(--pj-gold) 8%, transparent);
+  --pj-border:        color-mix(in oklch, var(--pj-gold) 18%, transparent);
+  --pj-border-subtle: color-mix(in oklch, var(--pj-gold) 10%, transparent);
+  --pj-muted:         color-mix(in oklch, var(--pj-sand) 55%, transparent);
+  --pj-gold-glow-30:  color-mix(in oklch, var(--pj-gold-glow) 30%, transparent);
+  --pj-player-bg:     #1A0A00;   /* Player bar — warm dark amber  */
+
+  /* ── Typography ──────────────────────────────────────────── */
+  --font-head:   'Montserrat', sans-serif;
+  --font-body:   'Open Sans', sans-serif;
+  --font-accent: 'Cormorant Garamond', serif;
+
+  /* ── Motion ──────────────────────────────────────────────── */
+  --duration-instant:   80ms;
+  --duration-fast:     150ms;
+  --duration-base:     300ms;
+  --duration-slow:     500ms;
+  --duration-cinematic: 800ms;
+
+  --ease-out:          cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in-out:       cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-spring:       cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-gospel-rise:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-psalm:        cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* ── Layout ──────────────────────────────────────────────── */
+  --player-height:  72px;
+  --sheet-radius:   24px;
+  --card-radius:    16px;
+  --btn-radius:      8px;
+
+  /* ── Elevation / glass ───────────────────────────────────── */
+  --glass-blur:        blur(24px) saturate(1.6);
+  --glass-blur-strong: blur(48px) saturate(1.8);
+  --glass-bg:          color-mix(in oklch, var(--pj-bg) 72%, transparent);
+  --glass-bg-strong:   color-mix(in oklch, var(--pj-bg) 85%, transparent);
+  --shadow-gold:       0 0 24px color-mix(in oklch, var(--pj-gold) 25%, transparent);
+  --shadow-card:       0 8px 32px color-mix(in oklch, var(--pj-deep-dark) 60%, transparent);
+}
+
+/* ── Reduced-motion overrides ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant:   0ms;
+    --duration-fast:      0ms;
+    --duration-base:      0ms;
+    --duration-slow:      0ms;
+    --duration-cinematic: 0ms;
+  }
+}
+
+/* ── Glass utility classes ───────────────────────────────── */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--pj-border-subtle);
+}
+.glass-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  border: 1px solid var(--pj-border);
+}
+
+/* ── Grain overlay ───────────────────────────────────────── */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+/* ── Aura warm (cover art halo) ──────────────────────────── */
+.aura-warm {
+  box-shadow: 0 0 40px color-mix(in oklch, var(--pj-gold) 35%, transparent),
+              0 0 80px color-mix(in oklch, var(--pj-gold) 15%, transparent);
+}
+
+/* ── Choreographed fade-in ───────────────────────────────── */
+[data-pj-sequence] > * {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: pj-fade-up var(--duration-base) var(--ease-gospel-rise) forwards;
+}
+[data-pj-sequence] > *:nth-child(1) { animation-delay: 0ms;   }
+[data-pj-sequence] > *:nth-child(2) { animation-delay: 60ms;  }
+[data-pj-sequence] > *:nth-child(3) { animation-delay: 120ms; }
+[data-pj-sequence] > *:nth-child(4) { animation-delay: 180ms; }
+[data-pj-sequence] > *:nth-child(5) { animation-delay: 240ms; }
+[data-pj-sequence] > *:nth-child(n+6) { animation-delay: 300ms; }
+
+@keyframes pj-fade-up {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Pointer-tracking spotlight ──────────────────────────── */
+.pj-spotlight {
+  --mx: 50%;
+  --my: 50%;
+  background: radial-gradient(
+    600px circle at var(--mx) var(--my),
+    color-mix(in oklch, var(--pj-gold) 6%, transparent),
+    transparent 70%
+  );
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  transition: background var(--duration-base) var(--ease-out);
+}
+
+/* ── Scroll-driven animations ────────────────────────────── */
+@supports (animation-timeline: scroll()) {
+  .scroll-fade-in {
+    animation: pj-fade-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+  }
+  .scroll-scale {
+    animation: pj-scale-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 25%;
+  }
+  .scroll-parallax {
+    animation: pj-parallax linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0% 100%;
+  }
+}
+
+@keyframes pj-scale-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes pj-parallax {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-40px); }
+}
+
+/* ── View Transition names ───────────────────────────────── */
+.vt-cover-art   { view-transition-name: cover-art; }
+.vt-track-title { view-transition-name: track-title; }
+.vt-player-bar  { view-transition-name: player-bar; }
+.vt-sheet       { view-transition-name: now-playing-sheet; }
+
+::view-transition-old(cover-art),
+::view-transition-new(cover-art) {
+  animation-duration: var(--duration-slow);
+  animation-timing-function: var(--ease-gospel-rise);
+}
+::view-transition-old(now-playing-sheet) {
+  animation: sheet-exit var(--duration-base) var(--ease-in-out) both;
+}
+::view-transition-new(now-playing-sheet) {
+  animation: sheet-enter var(--duration-slow) var(--ease-gospel-rise) both;
+}
+
+@keyframes sheet-enter {
+  from { opacity: 0; transform: translateY(100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes sheet-exit {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(30%); }
+}

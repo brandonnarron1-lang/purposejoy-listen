@@ -80,7 +80,7 @@ export default function NowPlayingSheet({ isOpen, onClose, queue = [] }: Props) 
       />
       <div
         ref={sheetRef}
-        className={`nps-sheet ${isOpen ? 'nps-sheet--open' : ''} ${isDragging ? 'nps-sheet--dragging' : ''}`}
+        className={`nps-sheet vt-sheet ${isOpen ? 'nps-sheet--open' : ''} ${isDragging ? 'nps-sheet--dragging' : ''}`}
         style={{
           transform: isOpen ? `translateY(${dragY}px)` : 'translateY(100%)',
           transition: isDragging ? 'none' : undefined,

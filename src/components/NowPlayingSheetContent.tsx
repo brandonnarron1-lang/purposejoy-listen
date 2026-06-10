@@ -4,6 +4,7 @@ import { useSheet } from '../context/SheetContext';
 import { useAudioAmplitude } from '../hooks/useAudioAmplitude';
 import { haptic } from '../hooks/useHaptic';
 import LyricsView from './LyricsView';
+import LyricShareCard from './LyricShareCard';
 import TrackActions from './TrackActions';
 import QueueView from './QueueView';
 
@@ -16,6 +17,7 @@ export default function NowPlayingSheetContent({ queue = [] }: Props) {
   const { isOpen, morphSource, clearMorph } = useSheet();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [fullSong, setFullSong] = useState<any>(null);
+  const [shareCardLine, setShareCardLine] = useState<string | null>(null);
   const scrubberRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -232,6 +234,38 @@ export default function NowPlayingSheetContent({ queue = [] }: Props) {
             </div>
           )}
 
+          {/* Gap-fill: Share current lyric line as image card */}
+          {fullSong?.lyrics_timed && (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0 4px' }}>
+              <button
+                onClick={() => {
+                  // Extract active line from parsed lyrics_timed
+                  try {
+                    const parsed = JSON.parse(fullSong.lyrics_timed)
+                    const lines: { text: string; start: number; end: number }[] = parsed.lines || []
+                    let activeLine = ''
+                    for (let i = lines.length - 1; i >= 0; i--) {
+                      if (currentTime >= lines[i].start) { activeLine = lines[i].text; break }
+                    }
+                    setShareCardLine(activeLine || lines[0]?.text || '')
+                  } catch { /* no-op */ }
+                }}
+                style={{
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  fontFamily: 'var(--font-head)', fontSize: 10, letterSpacing: '0.12em',
+                  textTransform: 'uppercase', color: 'var(--pj-muted)',
+                  padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 6,
+                }}
+                aria-label="Share current lyric"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                  <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/>
+                </svg>
+                Share lyric
+              </button>
+            </div>
+          )}
+
           <div className="nps-bottom-pad" aria-hidden />
         </div>
       </div>
@@ -240,6 +274,14 @@ export default function NowPlayingSheetContent({ queue = [] }: Props) {
       <div className="nps-page nps-page--queue">
         <QueueView queue={queue} />
       </div>
+
+      {/* Gap-fill: Lyric share card overlay */}
+      {shareCardLine !== null && (
+        <LyricShareCard
+          lyricText={shareCardLine}
+          onClose={() => setShareCardLine(null)}
+        />
+      )}
     </div>
   );
 }

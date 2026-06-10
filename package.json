@@ -8,7 +8,13 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy:prod": "npm run build && wrangler pages deploy dist --project-name=purposejoy-listen --branch=main"
+    "deploy:prod": "npm run build && wrangler pages deploy dist --project-name=purposejoy-listen --branch=main",
+    "shorts:identify": "node scripts/shorts/identify-hooks.js",
+    "shorts:compose":  "node scripts/shorts/compose-short.js",
+    "shorts:upload":   "node scripts/shorts/upload-short.js",
+    "shorts:oauth":    "node scripts/shorts/oauth-init.js",
+    "lyrics:normalize": "node INGEST/scripts/normalize-lyrics.js",
+    "lyrics:push":      "npx wrangler d1 execute purposejoy_db --file=INGEST/scripts/update-lyrics.sql"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20260426.1",

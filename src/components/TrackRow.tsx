@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import type { Song } from '../types'
 import { usePlayer } from '../context/PlayerContext'
+import { useListenStatus } from '../lib/listeningProgress'
 
 interface TrackRowProps {
   song: Song
@@ -17,6 +18,7 @@ function fmt(s?: number) {
 
 export function TrackRow({ song, queue, index }: TrackRowProps) {
   const { play, currentSong, playing } = usePlayer()
+  const { status: listenStatus } = useListenStatus(song.slug)
   const isActive = currentSong?.id === song.id
   const rowRef = useRef<HTMLDivElement>(null)
 
@@ -40,6 +42,24 @@ export function TrackRow({ song, queue, index }: TrackRowProps) {
         boxShadow: isActive ? 'inset 0 0 24px rgba(212,175,55,0.04)' : 'none',
       }}
     >
+      {/* Listen-status dot */}
+      {!isActive && (
+        <div style={{ width: 8, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {listenStatus === 'listened' && (
+            <span
+              title="Listened"
+              style={{ width: 7, height: 7, borderRadius: '50%', background: '#D4AF37', display: 'block' }}
+            />
+          )}
+          {listenStatus === 'in-progress' && (
+            <span
+              title="In progress"
+              style={{ width: 7, height: 7, borderRadius: '50%', border: '1.5px solid #D4AF37', display: 'block' }}
+            />
+          )}
+        </div>
+      )}
+
       {/* Index / now-playing indicator */}
       <div style={{ width: 24, textAlign: 'center', flexShrink: 0 }}>
         {isActive && playing ? (

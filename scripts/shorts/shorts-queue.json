@@ -1,0 +1,16 @@
+{
+  "_note": "Shorts queue scaffold. Populate with hook candidates from INGEST/shorts/pending/hooks-*.json",
+  "_schema": "slug = D1 song slug. Remove _note and _schema before use.",
+  "queue": [
+    {
+      "slug": "out-of-nowhere",
+      "hookFile": null,
+      "hookIndex": null,
+      "audioMasterPath": null,
+      "status": "pending",
+      "approvedAt": null,
+      "uploadedAt": null,
+      "youtubeVideoId": null
+    }
+  ]
+}

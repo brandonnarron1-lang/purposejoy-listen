@@ -8,3 +8,6 @@ dist-functions/
 
 # Mac
 .DS_Store
+
+# OAuth credentials and secrets — never commit
+secrets/

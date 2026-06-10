@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState, useRef, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, useRef, useCallback } from 'react';
+import type { ReactNode } from 'react';
 
 interface ThemePalette {
   vibrant: string;

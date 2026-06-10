@@ -2,6 +2,8 @@ import React, {
   createContext, useContext, useRef, useState, useCallback, useEffect
 } from 'react'
 import type { Song } from '../types'
+import { useWakeLock } from '../hooks/useWakeLock'
+import { recordProgress } from '../lib/listeningProgress'
 
 interface PlayerState {
   queue: Song[]
@@ -76,6 +78,18 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   })
 
   const currentSong = state.currentIndex >= 0 ? (state.queue[state.currentIndex] ?? null) : null
+
+  // Gap-fill: Wake Lock — keep screen on while playing
+  useWakeLock(state.playing)
+
+  // Gap-fill: Listening progress — record at ≥50% playback
+  useEffect(() => {
+    if (!currentSong?.slug || !state.duration || state.duration <= 0) return
+    const fraction = state.currentTime / state.duration
+    if (fraction >= 0.5) {
+      recordProgress(currentSong.slug, fraction)
+    }
+  }, [currentSong?.slug, state.currentTime, state.duration])
 
   // Fix A: set playsinline and webkit-playsinline on mount (not valid as JSX props)
   useEffect(() => {

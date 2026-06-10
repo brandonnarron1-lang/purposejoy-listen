@@ -1,8 +1,19 @@
 # RUN_STATE — purposejoy-listen
 
-Updated: 2026-06-10 (head-asset-fix deployed)
+Updated: 2026-06-10 14:32 (post-launch-v2 merged + deployed)
 
-## Status: LIVE ✅ — HEAD + OG FIXED ✅
+## Status: LIVE ✅ — POST-LAUNCH V2 COMPLETE ✅
+
+## Completed (session 3 — post-launch-v2)
+- Phase 2: Lighthouse mobile audit + perf optimizations (trimmed Google Fonts wght@300 removed, fetchPriority="high" on hero, Cormorant wght@500 restored to fix CLS)
+- Phase 3: Cloudflare Web Analytics beacon injected (token: 587e188627b448a3934d8255b3898bd7)
+- Phase 4: Privacy + Terms pages — real content (PrivacyPage.tsx, TermsPage.tsx)
+- Phase 5: brand-typography.css — @layer utilities system (eyebrow, credit, lyric, drop-cap, rule-ornament, prose); footer nav; NowPlayingSheet + LyricsView wired
+- Phase 6: npm run build (exit 0) → git merge post-launch-v2 to main (cc4063b) → wrangler deploy (exit 0)
+- Smoke tests: 7/7 pass (/, /privacy, /terms, icon-512, og-card, CF beacon, trimmed fonts)
+- Commit: cc4063b "Merge post-launch-v2: typography system, privacy/terms, perf optimizations, CF analytics"
+- Production: https://listen.purposejoy.org ✅
+- Note: main is 2 commits ahead of origin/main — push when ready
 
 ## Completed (session 2 — head + asset fix)
 - HEAD tags: fully rewritten — title, description, og:type=music.album, og:url, og:image (working URL), twitter card, PWA meta
@@ -41,12 +52,10 @@ Updated: 2026-06-10 (head-asset-fix deployed)
 - API: /api/playlists/purposejoy → 14 songs, lyrics_timed + transcript_state confirmed ✅
 - GitHub: main @ 32383b8
 
-## Remaining (post-launch, not blocking)
-- Cloudflare Access admin protection (02_ACCESS.md) — needs manual Cloudflare Zero Trust setup
-- App icons: only 6 sizes in public/icons/ — full PWA suite would be 17
-- Privacy/terms stubs → real copy
-- Web Analytics token in index.html
-- Mike's email → Cloudflare Access allowlist
+## Remaining (open items)
+- Cloudflare Access /admin/* gate — PAUSED, needs human action: add Access policy for listen.purposejoy.org in Cloudflare Zero Trust dashboard (Brandon + Mike allowlist)
+- Push main to origin/main when ready (`git push origin main`)
+- App icons: only 6 sizes in public/icons/ — full PWA suite would be 17 (non-blocking)
 
 ## Next entrypoint
 App is live at https://listen.purposejoy.org

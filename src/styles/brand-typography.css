@@ -1,0 +1,108 @@
+/* ━━━ PURPOSEJOY SIGNATURE TYPOGRAPHIC TREATMENTS ━━━━━━━━━━━━━━━━━━━━ */
+/* Source of truth: brand_guide.txt / brand-tokens.css                   */
+/* Wrapped in @layer utilities so Tailwind 4 does not tree-shake them.   */
+
+@layer utilities {
+  .eyebrow {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--pj-gold) 80%, transparent);
+    font-feature-settings: 'kern' 1;
+    margin-bottom: 0.5em;
+  }
+
+  .credit {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--pj-gold) 45%, transparent);
+  }
+
+  .lyric {
+    font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--pj-gold);
+    text-wrap: balance;
+    transition: color var(--duration-base) var(--ease-psalm);
+  }
+
+  .drop-cap::first-letter {
+    font-family: 'Cormorant Garamond', 'EB Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 4.5em;
+    line-height: 0.85;
+    float: left;
+    padding: 0.08em 0.14em 0 0;
+    color: var(--pj-gold);
+  }
+
+  .rule-ornament {
+    border: 0;
+    position: relative;
+    height: 1px;
+    background: color-mix(in oklch, var(--pj-gold) 30%, transparent);
+    margin: 3rem auto;
+    max-width: 12rem;
+  }
+  .rule-ornament::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background: var(--pj-gold);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 16px -2px color-mix(in oklch, var(--pj-gold) 50%, transparent);
+  }
+
+  /* ── Prose container — reading optimization for privacy/terms ── */
+  .prose {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: color-mix(in oklch, var(--pj-text) 92%, transparent);
+    text-wrap: pretty;
+  }
+  .prose h1 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+    color: var(--pj-text);
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+  .prose h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--pj-text);
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .prose p  { margin-top: 1.25rem; }
+  .prose ul { margin-top: 1.25rem; padding-left: 1.5rem; }
+  .prose ul li { margin-top: 0.5rem; }
+  .prose a  {
+    color: var(--pj-gold);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--pj-gold) 40%, transparent);
+    text-underline-offset: 0.2em;
+  }
+  .prose a:hover { text-decoration-color: var(--pj-gold); }
+  .prose em { color: var(--pj-gold-bright); font-style: italic; }
+  .prose strong { color: var(--pj-text); }
+}

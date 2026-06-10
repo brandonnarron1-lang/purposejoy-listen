@@ -1,10 +1,19 @@
 # RUN_STATE — purposejoy-listen
 
-Updated: 2026-06-10
+Updated: 2026-06-10 (head-asset-fix deployed)
 
-## Status: LIVE ✅
+## Status: LIVE ✅ — HEAD + OG FIXED ✅
 
-## Completed (this session — brand system integration)
+## Completed (session 2 — head + asset fix)
+- HEAD tags: fully rewritten — title, description, og:type=music.album, og:url, og:image (working URL), twitter card, PWA meta
+- OG card: generated via Pillow → public/og/og-card.png + twitter-card.png (1200×630 / 1200×600)
+- manifest.webmanifest: name="Live With Purpose And Joy", short_name="Purpose & Joy", theme=#140A05, 4 icons
+- vite.config.ts: includeAssets now includes og/*.png (was missing, caused og/ to not copy to dist)
+- Commit: 23f9d3d (head-asset-fix branch) → merged main @ 410318e
+- Production deploy: https://f081dc49.purposejoy-listen.pages.dev ✅
+- Smoke: og-card 200, OG tags correct, manifest theme+icons correct, icon-512 200
+
+## Completed (session 1 — brand system integration)
 - Brand token CSS: src/styles/brand-tokens.css — canonical vars (#D4AF37 gold, #140A05 bg, #0A0500 deep)
   glass utilities, grain, aura-warm, data-pj-sequence, scroll-driven animations,
   View Transition names, pj-spotlight, reduced-motion overrides

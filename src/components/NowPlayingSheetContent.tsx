@@ -151,8 +151,9 @@ export default function NowPlayingSheetContent({ queue = [] }: Props) {
           </div>
 
           <div className="nps-titles">
+            <p className="eyebrow">Now Playing</p>
             <h2 className="nps-title">{currentSong.title}</h2>
-            <p className="nps-artist">{currentSong.artist}</p>
+            <p className="nps-artist credit">{currentSong.artist}</p>
           </div>
 
           <div

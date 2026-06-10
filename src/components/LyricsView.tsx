@@ -147,7 +147,7 @@ export default function LyricsView({ song, mode = 'inline', onClose }: Props) {
             <div
               key={idx}
               ref={isActive ? activeLineRef : null}
-              className={`lyrics-line${isActive ? ' lyrics-line--active' : ''}${isPast ? ' lyrics-line--past' : ''}`}
+              className={`lyrics-line${isActive ? ' lyrics-line--active lyric' : ''}${isPast ? ' lyrics-line--past' : ''}`}
             >
               {isActive && isCurrentTrack && lineWords.length > 0 ? (
                 lineWords.map((w, wi) => {

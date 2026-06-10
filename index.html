@@ -60,6 +60,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=optional" rel="stylesheet" media="print" onload="this.media='all'" />
     <noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=optional" rel="stylesheet" /></noscript>
 
+    <!-- Critical CSS: paint background before full stylesheet loads (eliminates white flash + reduces FCP) -->
+    <style>
+      :root{--pj-bg:#140A05;--pj-text:#fff}
+      html,body,#root{height:100%;margin:0;padding:0;background-color:var(--pj-bg);color:var(--pj-text)}
+      body{overflow-x:hidden}
+    </style>
+
     <!-- Cloudflare Web Analytics -->
     <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "587e188627b448a3934d8255b3898bd7"}'></script>
     <!-- End Cloudflare Web Analytics -->

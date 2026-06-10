@@ -1,51 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-    <!-- Default meta (overridden per-route by Pages Functions OG injection) -->
-    <title>PurposeJoy — Songs by Mike Eatmon</title>
-    <meta name="description" content="Stream gospel and faith music — Live With Purpose And Joy.">
+    <!-- Identity -->
+    <title>Live With Purpose And Joy — Mike Eatmon</title>
+    <meta name="description" content="A country gospel album by Mike Eatmon. Listen at listen.purposejoy.org." />
+    <meta name="application-name" content="Purpose &amp; Joy" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="format-detection" content="telephone=no" />
 
-    <!-- Default OG -->
-    <meta property="og:title" content="PurposeJoy">
-    <meta property="og:site_name" content="PurposeJoy">
-    <meta name="application-name" content="PurposeJoy">
-    <meta property="og:description" content="Stream gospel and faith music — Live With Purpose And Joy.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://listen.purposejoy.org">
-    <meta property="og:image" content="https://listen.purposejoy.org/brand/logo-warm.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://listen.purposejoy.org/brand/logo-warm.png">
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
     <!-- PWA -->
-    <link rel="manifest" href="/manifest.webmanifest">
-    <meta name="theme-color" content="#140A05">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="PurposeJoy">
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=2">
-    <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png?v=2">
-    <link rel="apple-touch-icon-precomposed" href="/icons/apple-touch-icon.png?v=2">
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#140A05" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Purpose &amp; Joy" />
 
-    <!-- iOS PWA splash images -->
-    <link rel="apple-touch-startup-image"
-          media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)"
-          href="/splash/apple-touch-startup-iphone-8.png">
-    <link rel="apple-touch-startup-image"
-          media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)"
-          href="/splash/apple-touch-startup-iphone-13.png">
-    <link rel="apple-touch-startup-image"
-          media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)"
-          href="/splash/apple-touch-startup-iphone-15-pro-max.png">
+    <!-- Open Graph — music.album -->
+    <meta property="og:type" content="music.album" />
+    <meta property="og:site_name" content="Purpose &amp; Joy" />
+    <meta property="og:title" content="Live With Purpose And Joy" />
+    <meta property="og:description" content="A country gospel album by Mike Eatmon." />
+    <meta property="og:url" content="https://listen.purposejoy.org" />
+    <meta property="og:image" content="https://listen.purposejoy.org/og/og-card.png" />
+    <meta property="og:image:secure_url" content="https://listen.purposejoy.org/og/og-card.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Live With Purpose And Joy — a rising sun on warm dark with the album title set in italic serif" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="music:musician" content="Mike Eatmon" />
+    <meta property="music:album:track:count" content="14" />
 
-    <!-- Brand typography — Montserrat (UI/headings) + Open Sans (body) + Cormorant Garamond (accent) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Open+Sans:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Live With Purpose And Joy" />
+    <meta name="twitter:description" content="A country gospel album by Mike Eatmon." />
+    <meta name="twitter:image" content="https://listen.purposejoy.org/og/twitter-card.png" />
+    <meta name="twitter:image:alt" content="Live With Purpose And Joy — country gospel album by Mike Eatmon" />
+
+    <!-- Brand typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Open+Sans:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>

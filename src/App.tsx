@@ -18,16 +18,11 @@ import { AdminMusic } from './pages/admin/AdminMusic'
 import { AdminSongForm } from './pages/admin/AdminSongForm'
 
 export default function App() {
-  // Splash shows once per session (never on admin routes, never on return visits)
   const isAdminRoute = typeof window !== 'undefined' &&
     window.location.pathname.startsWith('/admin')
   const alreadySplashed = typeof window !== 'undefined' &&
     !!sessionStorage.getItem('pj_splashed')
 
-  // Start hidden — defer mount until after first paint via requestIdleCallback.
-  // This lets the track list (seeded from <script id="pj-seed">) hit LCP before
-  // the splash overlay ever mounts, so Lighthouse records track content as LCP,
-  // not the splash logo.
   const [showSplash, setShowSplash] = useState(false)
 
   useEffect(() => {

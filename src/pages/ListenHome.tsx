@@ -9,14 +9,30 @@ import SubscribeModal, { shouldShowSubscribeModal } from '../components/Subscrib
 // Show modal after this many track-ended events (1 = after first full listen)
 const MODAL_TRIGGER_COUNT = 1;
 
+/** Read the build-time seed injected by prerender-seed.mjs, if present. */
+function readSeed(): Song[] | null {
+  try {
+    const el = document.getElementById('pj-seed');
+    if (!el) return null;
+    const data = JSON.parse(el.textContent || '');
+    if (Array.isArray(data?.songs) && data.songs.length > 0) return data.songs as Song[];
+  } catch {
+    // Malformed seed — fall through to network fetch
+  }
+  return null;
+}
+
 export function ListenHome() {
-  const [songs, setSongs] = useState<Song[]>([]);
-  const [loading, setLoading] = useState(true);
+  const seedSongs = readSeed();
+  const [songs, setSongs] = useState<Song[]>(seedSongs ?? []);
+  const [loading, setLoading] = useState(seedSongs === null);
   const [modalOpen, setModalOpen] = useState(false);
   const [footerModalOpen, setFooterModalOpen] = useState(false);
   const tracksEndedRef = useRef(0);
 
   useEffect(() => {
+    // Skip network fetch when build-time seed already populated songs
+    if (seedSongs !== null) return;
     fetch('/api/playlists/purposejoy')
       .then(r => r.json())
       .then(data => {
@@ -24,6 +40,7 @@ export function ListenHome() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Listen for track-ended events from PlayerContext

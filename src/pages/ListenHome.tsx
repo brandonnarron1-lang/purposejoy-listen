@@ -43,7 +43,7 @@ export function ListenHome() {
   const totalMin = Math.floor(totalSeconds / 60);
 
   return (
-    <div className="listen-home">
+    <div className="listen-home grain">
       <AtmosphericBackground />
 
       <HeroMasthead trackCount={songs.length} totalMinutes={totalMin} />
@@ -56,7 +56,7 @@ export function ListenHome() {
             ))}
           </ol>
         ) : (
-          <ol className="track-list">
+          <ol className="track-list" data-pj-sequence>
             {songs.map((song, idx) => (
               <li key={song.id}>
                 <TrackCard

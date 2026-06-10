@@ -63,7 +63,7 @@ export default function MiniPlayer() {
           ref={coverRef}
           src={coverUrl}
           alt=""
-          className={`mini-player-cover ${playing ? 'mini-player-cover--playing' : ''}`}
+          className={`mini-player-cover vt-cover-art ${playing ? 'mini-player-cover--playing' : ''}`}
         />
         <div className="mini-player-meta">
           <div className="mini-player-title">{currentSong.title}</div>

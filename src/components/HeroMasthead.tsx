@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { usePointerTrack } from '../hooks/usePointerTrack';
 
 interface Props {
   trackCount: number;
@@ -16,6 +17,7 @@ export default function HeroMasthead({
   tagline = 'Live with purpose and joy.',
 }: Props) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const heroRef = usePointerTrack<HTMLElement>();
 
   useEffect(() => {
     const isWide = window.innerWidth >= 1024;
@@ -32,7 +34,7 @@ export default function HeroMasthead({
   }, []);
 
   return (
-    <header className="hero-masthead">
+    <header ref={heroRef} className="hero-masthead" style={{ position: 'relative', isolation: 'isolate' }}>
       {/* LQIP base layer — paints instantly before high-res loads */}
       <div
         className="hero-lqip"
@@ -59,7 +61,7 @@ export default function HeroMasthead({
       <div className="hero-vignette" aria-hidden />
 
       {/* Composed masthead lockup */}
-      <div className="hero-content">
+      <div className="hero-content" data-pj-sequence>
         <div className="hero-flourish hero-flourish--top" aria-hidden>
           <span className="hero-flourish-line" />
           <span className="hero-flourish-mark">◇</span>
@@ -96,6 +98,9 @@ export default function HeroMasthead({
           <span className="hero-flourish-star">✦</span>
         </div>
       </div>
+
+      {/* Pointer spotlight layer */}
+      <div className="pj-spotlight" aria-hidden />
 
       {/* Scroll affordance */}
       <div className="hero-scroll-cue" aria-hidden>

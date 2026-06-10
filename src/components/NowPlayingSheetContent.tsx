@@ -145,7 +145,7 @@ export default function NowPlayingSheetContent({ queue = [] }: Props) {
             <img
               src={coverUrl}
               alt={`${currentSong.title} cover`}
-              className={`nps-cover ${playing ? 'nps-cover--playing' : ''}`}
+              className={`nps-cover vt-cover-art ${playing ? 'nps-cover--playing' : ''}`}
               style={{ '--amplitude': amplitude.toFixed(3) } as React.CSSProperties}
             />
           </div>

@@ -9,17 +9,20 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'script-defer', // defer SW registration — removes render-blocking registerSW.js
       includeAssets: ['favicon.ico', 'icons/*.png', 'og/*.png'],
       manifest: false, // We manage manifest manually
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,webp}'],
         runtimeCaching: [
           {
+            // Cache both original and .webp variants from the cover worker
             urlPattern: /^\/api\/cover\//,
             handler: 'CacheFirst',
             options: {
               cacheName: 'cover-art-cache',
               expiration: { maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [200] },
             },
           },
           {

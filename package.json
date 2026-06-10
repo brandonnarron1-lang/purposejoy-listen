@@ -10,11 +10,11 @@
     "preview": "vite preview",
     "deploy:prod": "npm run build && wrangler pages deploy dist --project-name=purposejoy-listen --branch=main",
     "shorts:identify": "node scripts/shorts/identify-hooks.js",
-    "shorts:compose":  "node scripts/shorts/compose-short.js",
-    "shorts:upload":   "node scripts/shorts/upload-short.js",
-    "shorts:oauth":    "node scripts/shorts/oauth-init.js",
+    "shorts:compose": "node scripts/shorts/compose-short.js",
+    "shorts:upload": "node scripts/shorts/upload-short.js",
+    "shorts:oauth": "node scripts/shorts/oauth-init.js",
     "lyrics:normalize": "node INGEST/scripts/normalize-lyrics.js",
-    "lyrics:push":      "npx wrangler d1 execute purposejoy_db --file=INGEST/scripts/update-lyrics.sql"
+    "lyrics:push": "npx wrangler d1 execute purposejoy_db --file=INGEST/scripts/update-lyrics.sql"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20260426.1",
@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@img/sharp-darwin-arm64": "^0.35.0",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -38,7 +39,8 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
-    "typescript": "~6.0.2",
+    "sharp": "^0.35.0",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.58.2",
     "vite": "^8.0.10"
   }

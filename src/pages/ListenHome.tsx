@@ -77,6 +77,15 @@ export function ListenHome() {
           >
             Get notified when new music drops
           </button>
+          <nav className="flex flex-wrap gap-3 items-center justify-center mt-6 credit" aria-label="Site">
+            <a href="/privacy">Privacy</a>
+            <span aria-hidden="true">·</span>
+            <a href="/terms">Terms</a>
+            <span aria-hidden="true">·</span>
+            <a href="mailto:mike@ourtownproperties.com">Contact</a>
+            <span aria-hidden="true">·</span>
+            <span>© {new Date().getFullYear()} Mike Eatmon</span>
+          </nav>
         </footer>
       </main>
 

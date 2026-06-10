@@ -51,6 +51,7 @@ export default function HeroMasthead({
           alt=""
           loading="eager"
           decoding="async"
+          fetchPriority="high"
           onLoad={() => setImageLoaded(true)}
         />
       </picture>

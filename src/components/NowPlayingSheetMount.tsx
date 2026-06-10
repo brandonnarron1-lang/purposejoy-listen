@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import NowPlayingSheet from './NowPlayingSheet';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useSheet } from '../context/SheetContext';
 import { usePlayer } from '../context/PlayerContext';
+
+const NowPlayingSheet = lazy(() => import('./NowPlayingSheet'));
 
 export default function NowPlayingSheetMount() {
   const { isOpen, close } = useSheet();
@@ -17,5 +18,9 @@ export default function NowPlayingSheetMount() {
       .catch(() => {});
   }, [isOpen, currentSong?.slug]);
 
-  return <NowPlayingSheet isOpen={isOpen} onClose={close} queue={queue} />;
+  return (
+    <Suspense fallback={null}>
+      <NowPlayingSheet isOpen={isOpen} onClose={close} queue={queue} />
+    </Suspense>
+  );
 }

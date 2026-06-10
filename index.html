@@ -47,17 +47,18 @@
     <meta name="twitter:image" content="https://listen.purposejoy.org/og/twitter-card.png" />
     <meta name="twitter:image:alt" content="Live With Purpose And Joy — country gospel album by Mike Eatmon" />
 
-    <!-- LCP preload: first track cover (sng_be23fe3ea61f = "Out of Nowhere", sort_order 1) -->
-    <!-- Worker serves WebP when Accept: image/webp is present; preload with type=image/webp -->
-    <link rel="preload" as="image" href="/api/cover/art/sng_be23fe3ea61f.webp" type="image/webp" fetchpriority="high" />
+    <!-- LCP preload: hero wordmark is the actual LCP element on mobile -->
+    <link rel="preload" as="image" href="/brand/wordmark.png" fetchpriority="high" />
+    <!-- Cover art preload for first track (loads after wordmark) -->
+    <link rel="preload" as="image" href="/api/cover/art/sng_be23fe3ea61f.webp" type="image/webp" />
 
     <!-- Brand typography — non-render-blocking via print/onload swap -->
+    <!-- font-display=optional: use cached font instantly or fall back to system; prevents FOUT/CLS -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Trimmed to weights actually used; Cormorant includes 500 for .listen-hero-tagline -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" /></noscript>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=optional" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=optional" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=optional" rel="stylesheet" /></noscript>
 
     <!-- Cloudflare Web Analytics -->
     <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "587e188627b448a3934d8255b3898bd7"}'></script>

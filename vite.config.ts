@@ -9,7 +9,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'icons/*.png'],
+      includeAssets: ['favicon.ico', 'icons/*.png', 'og/*.png'],
       manifest: false, // We manage manifest manually
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],

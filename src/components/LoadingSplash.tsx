@@ -8,12 +8,12 @@ export function LoadingSplash({ onDone }: LoadingSplashProps) {
   const [phase, setPhase] = useState<'in' | 'hold' | 'out'>('in')
 
   useEffect(() => {
-    // Hold after fade-in
-    const holdTimer = setTimeout(() => setPhase('hold'), 400)
+    // Hold after fade-in (snappy: 200ms in, 200ms hold, 400ms out = 800ms total)
+    const holdTimer = setTimeout(() => setPhase('hold'), 200)
     // Begin fade-out
-    const outTimer = setTimeout(() => setPhase('out'), 1600)
+    const outTimer = setTimeout(() => setPhase('out'), 400)
     // Notify parent done
-    const doneTimer = setTimeout(() => onDone(), 2200)
+    const doneTimer = setTimeout(() => onDone(), 800)
 
     return () => {
       clearTimeout(holdTimer)

@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, lazy, Suspense } from 'react';
 import { usePlayer } from '../context/PlayerContext';
 import { useSheet } from '../context/SheetContext';
 import { useAudioAmplitude } from '../hooks/useAudioAmplitude';
 import { haptic } from '../hooks/useHaptic';
 import LyricsView from './LyricsView';
-import LyricShareCard from './LyricShareCard';
+const LyricShareCard = lazy(() => import('./LyricShareCard'));
 import TrackActions from './TrackActions';
 import QueueView from './QueueView';
 
@@ -278,10 +278,12 @@ export default function NowPlayingSheetContent({ queue = [] }: Props) {
 
       {/* Gap-fill: Lyric share card overlay */}
       {shareCardLine !== null && (
-        <LyricShareCard
-          lyricText={shareCardLine}
-          onClose={() => setShareCardLine(null)}
-        />
+        <Suspense fallback={null}>
+          <LyricShareCard
+            lyricText={shareCardLine}
+            onClose={() => setShareCardLine(null)}
+          />
+        </Suspense>
       )}
     </div>
   );

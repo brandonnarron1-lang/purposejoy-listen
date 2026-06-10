@@ -15,7 +15,11 @@ export const onRequestGet = async (ctx: { params: Record<string,string>; env: En
     ORDER BY pi.track_order ASC
   `).bind(playlist.id).all()
 
-  return json({ ...playlist, songs }, 200, { 'Cache-Control': 'public, max-age=60' })
+  return json({ ...playlist, songs }, 200, {
+    'Cache-Control': 'public, max-age=300, s-maxage=300, stale-while-revalidate=3600',
+    'CDN-Cache-Control': 'public, s-maxage=3600',
+    'Vary': 'Accept-Encoding',
+  })
 }
 
 function json(body: unknown, status = 200, extra: Record<string,string> = {}) {

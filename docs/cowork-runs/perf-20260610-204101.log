@@ -1,0 +1,4 @@
+RUN_ID=perf-20260610-204101  prod_before=9a299e9b-4a24-44dd-aad4-e9f02da46555  started=20:41:05Z
+[20:43:21Z] phase-1: cache headers applied — s-maxage=300, CDN-Cache-Control, Vary
+[20:43:21Z] phase-2: 2 lazy() splits (NowPlayingSheet, LyricShareCard), tsc errors=0
+[20:44:26Z] phase-3: 4 chunks (288K+28K+16K+8K), dist=4.0M, all required files present

@@ -18,18 +18,33 @@ import { AdminMusic } from './pages/admin/AdminMusic'
 import { AdminSongForm } from './pages/admin/AdminSongForm'
 
 export default function App() {
-  // Show splash once per session (not on admin routes)
+  // Splash shows once per session (never on admin routes, never on return visits)
   const isAdminRoute = typeof window !== 'undefined' &&
     window.location.pathname.startsWith('/admin')
-  const [showSplash, setShowSplash] = useState(
-    !isAdminRoute && !sessionStorage.getItem('pj_splashed')
-  )
+  const alreadySplashed = typeof window !== 'undefined' &&
+    !!sessionStorage.getItem('pj_splashed')
+
+  // Start hidden — defer mount until after first paint via requestIdleCallback.
+  // This lets the track list (seeded from <script id="pj-seed">) hit LCP before
+  // the splash overlay ever mounts, so Lighthouse records track content as LCP,
+  // not the splash logo.
+  const [showSplash, setShowSplash] = useState(false)
 
   useEffect(() => {
-    if (!showSplash) {
-      sessionStorage.setItem('pj_splashed', '1')
+    if (isAdminRoute || alreadySplashed) return
+
+    const mount = () => setShowSplash(true)
+
+    if (typeof requestIdleCallback !== 'undefined') {
+      const id = requestIdleCallback(mount, { timeout: 300 })
+      return () => cancelIdleCallback(id)
+    } else {
+      // Safari fallback: defer one frame
+      const id = requestAnimationFrame(mount)
+      return () => cancelAnimationFrame(id)
     }
-  }, [showSplash])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>

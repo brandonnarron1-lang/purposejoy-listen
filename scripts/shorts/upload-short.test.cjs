@@ -1,8 +1,11 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
 const {
-  parseArgs, buildMetadata, mergeRefreshedTokens, assertChannelMatch, validateUploadUrl, run
+  parseArgs, buildMetadata, mergeRefreshedTokens, assertChannelMatch, validateUploadUrl, hasUploadReceipt, run
 } = require('./upload-short.js');
 
 const channelId = 'UC1111111111111111111111';
@@ -143,4 +146,22 @@ test('receipt failure reports accepted video ID and explicitly forbids blind ret
   );
   assert.equal(f.calls.filter(call => call === 'upload').length, 1);
   assert.ok(f.messages.some(message => message.includes('https://studio.youtube.com/video/testVideo01/edit')));
+});
+
+test('durable per-video receipt prevents a duplicate when the aggregate log write was lost', t => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'pj-receipt-test-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  fs.writeFileSync(path.join(directory, 'testVideo01.json'), JSON.stringify({
+    videoId: 'testVideo01', sha256: 'fixture-hash', channelId
+  }));
+  assert.equal(hasUploadReceipt('fixture-hash', channelId, [], directory), true);
+  assert.equal(hasUploadReceipt('other-hash', channelId, [], directory), false);
+  assert.equal(hasUploadReceipt('fixture-hash', otherId, [], directory), false);
+});
+
+test('an unreadable durable receipt blocks another upload until it is reconciled', t => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'pj-receipt-test-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  fs.writeFileSync(path.join(directory, 'testVideo01.json'), '{truncated');
+  assert.throws(() => hasUploadReceipt('fixture-hash', channelId, [], directory), /receipt is unreadable/);
 });

@@ -46,7 +46,7 @@ The script verifies the channel, displays the metadata and asks for `yes` in an 
 
 Open the returned YouTube Studio URL to review playback, audience, synthetic-media disclosure, captions, thumbnail and the final publishing time. This repair does not implement unattended publication or a background scheduler. The old queue JSON remains a scaffold.
 
-If the response is uncertain, or YouTube accepted the video but the local receipt failed, check YouTube Studio before retrying. The script does not retry uploads automatically. Local hash receipts help catch repeated files but are not a distributed deduplication system.
+If the response is uncertain, or YouTube accepted the video but the local receipt failed, check YouTube Studio before retrying. The script does not retry uploads automatically. Duplicate checks read both the summary log and the per-video receipts, so a saved receipt still protects against a repeated file if the summary update failed. Unreadable receipts require reconciliation. This is not a distributed deduplication system.
 
 ## Existing media production tools
 

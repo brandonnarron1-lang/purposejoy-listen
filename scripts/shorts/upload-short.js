@@ -210,6 +210,29 @@ function readLog() {
   return log;
 }
 
+function hasUploadReceipt(sha256, channelId, log = readLog(), receiptDirectory = RECEIPT_DIR) {
+  const matches = entry => entry && typeof entry === 'object' &&
+    entry.sha256 === sha256 && entry.channelId === channelId;
+  if (log.some(matches)) return true;
+  if (!fs.existsSync(receiptDirectory)) return false;
+  for (const name of fs.readdirSync(receiptDirectory).filter(name => name.endsWith('.json'))) {
+    const filename = path.join(receiptDirectory, name);
+    let receipt;
+    try {
+      if (!fs.lstatSync(filename).isFile()) throw new Error('Not a regular receipt');
+      receipt = JSON.parse(fs.readFileSync(filename, 'utf8'));
+      if (!receipt || typeof receipt !== 'object' || Array.isArray(receipt) ||
+          typeof receipt.sha256 !== 'string' || typeof receipt.channelId !== 'string') {
+        throw new Error('Invalid receipt');
+      }
+    } catch (_) {
+      throw new Error('A saved upload receipt is unreadable; reconcile it before uploading.');
+    }
+    if (matches(receipt)) return true;
+  }
+  return false;
+}
+
 async function upload(info, metadata, auth) {
   if (metadata.status.privacyStatus !== 'private') throw new Error('This uploader only accepts private uploads.');
   const hash = crypto.createHash('sha256');
@@ -219,7 +242,7 @@ async function upload(info, metadata, auth) {
   if (current.size !== info.size || current.mtimeMs !== info.mtimeMs) {
     throw new Error('The approved file changed after preview. Run the preview again.');
   }
-  if (readLog().some(entry => entry.sha256 === sha256 && entry.channelId === auth.channel.id)) {
+  if (hasUploadReceipt(sha256, auth.channel.id)) {
     throw new Error('This exact file already has a local upload receipt for this channel. Check YouTube Studio.');
   }
   const json = JSON.stringify(metadata);
@@ -317,7 +340,7 @@ async function run(args, io) {
   return 'uploaded';
 }
 
-module.exports = { parseArgs, buildMetadata, mergeRefreshedTokens, assertChannelMatch, validateUploadUrl, run };
+module.exports = { parseArgs, buildMetadata, mergeRefreshedTokens, assertChannelMatch, validateUploadUrl, hasUploadReceipt, run };
 if (require.main === module) {
   Promise.resolve().then(() => run(parseArgs(process.argv.slice(2)), {
     inspectFile, authorize, upload, recordUpload, confirm, log: message => console.log(message)
